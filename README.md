@@ -45,8 +45,9 @@ output/                ← the generated static site (deploy this)
 
 ## How content is created
 
-1. **Hand-authored pages** live in `pages[]` with full `blocks`. The 16 shipped
-   pages (deploys, fixes, comparisons, how-tos) show the quality bar.
+1. **Hand-authored pages** live in `pages[]` with full `blocks`. The 28 English
+   pages (deploys, fixes, comparisons, how-tos) — plus AR/FR translations of the
+   top two — show the quality bar.
 2. **Matrix pages** in `matrix{}` expand automatically: `tasks × pattern` and
    `errors × pattern`. These ship as **skeletons marked DRAFT** — correct SEO
    structure, empty body. Fill before publishing (thin pages get penalized).
@@ -68,14 +69,39 @@ matrix. After that:
 1. Check which keywords are getting impressions (Google Search Console).
 2. Add **one** new task or error to `matrix{}` (or promote a skeleton to a full
    page by filling its body).
-3. `python3 build.py` → redeploy.
+3. `git push` → GitHub Actions rebuilds and redeploys (or `python build.py`
+   locally to preview first).
 
 That's the 5-minute version — but only because the system was built first.
 
-## Before you publish
+## Languages (EN / AR / FR)
+
+A page can be translated by adding a copy to `pages[]` with:
+
+- `"lang": "ar"` (or `"fr"`) — Arabic renders right-to-left automatically.
+- `"group": "<shared-key>"` — the **same** key on the English page and its
+  translations. The build then wires `hreflang` tags + a language switcher
+  between them, and lists only the English versions on the home page.
+
+UI strings (Related, FAQ heading, "updated/by", the affiliate box) are
+translated from the `i18n` block; affiliate copy can have `blurb_ar` / `cta_fr`
+etc. Currently translated: `best-laravel-hosting-2026` and
+`deploy-laravel-app-cloudways`, each in AR + FR. Copy the pattern for more.
+
+## Search Console & Analytics
+
+Both are off until you paste your codes into `site` in `data/keywords.json`:
+
+- `"gsc_verification": "..."` → injects the Google Search Console
+  `<meta>` verification tag on every page. Then submit
+  `<base_url>/sitemap.xml` in Search Console.
+- `"ga_id": "G-XXXXXXX"` → injects the GA4 tag on every page.
+
+Leave them `""` to inject nothing.
+
+## Before you earn
 
 - Replace every `YOUR_ID` in `data/keywords.json` affiliate URLs with your real
-  affiliate IDs.
-- Set the real domain in `site.base_url` (used by canonical tags + sitemap).
+  affiliate IDs (apply to the programs first — `site.base_url` is already set).
 - Fill every DRAFT page or leave it unbuilt — never publish empty skeletons.
-- Deploy `output/` to any static host (the irony: this site itself needs no PHP).
+- `git push` → GitHub Actions rebuilds and redeploys automatically.
