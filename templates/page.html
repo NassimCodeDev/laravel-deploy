@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<link rel="canonical" href="{{CANONICAL}}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:url" content="{{CANONICAL}}">
+<meta name="robots" content="index,follow">
+{{JSONLD}}
+<style>
+  :root{
+    --bg:#fafaf9; --surface:#ffffff; --ink:#1c1917; --muted:#6b6660;
+    --line:#e7e5e4; --accent:#fb503b; --accent-ink:#b8341f;
+    --code-bg:#1c1917; --code-ink:#e7e5e4; --code-line:#3a3733;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink);text-underline-offset:3px;text-decoration-thickness:1px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px}
+
+  header.site{border-bottom:1px solid var(--line);background:var(--surface)}
+  header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.02em;
+    color:var(--ink);text-decoration:none}
+  .logo b{color:var(--accent)}
+  .nav-mono{font-family:var(--mono);font-size:13px;color:var(--muted)}
+
+  nav.crumbs{font-family:var(--mono);font-size:12.5px;color:var(--muted);
+    padding-top:28px;letter-spacing:.01em}
+  nav.crumbs a{color:var(--muted)}
+  nav.crumbs span{color:var(--line)}
+
+  .eyebrow{font-family:var(--mono);font-size:12px;text-transform:uppercase;
+    letter-spacing:.14em;color:var(--accent);margin:26px 0 10px}
+  h1{font-size:33px;line-height:1.18;letter-spacing:-.025em;margin:0 0 14px;font-weight:800}
+  .intro{font-size:19px;color:#3f3b37;margin:0 0 8px}
+  .meta-line{font-family:var(--mono);font-size:12.5px;color:var(--muted);
+    margin:18px 0 0;padding-bottom:30px;border-bottom:1px solid var(--line)}
+
+  article{padding:8px 0 10px}
+  article h2{font-size:23px;letter-spacing:-.02em;margin:38px 0 12px;font-weight:750}
+  article p{margin:0 0 16px}
+  article ul{margin:0 0 18px;padding-left:0;list-style:none}
+  article ul li{position:relative;padding-left:26px;margin:0 0 9px}
+  article ul li::before{content:"›";position:absolute;left:6px;top:-1px;
+    color:var(--accent);font-family:var(--mono);font-weight:700}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;
+    padding:18px 18px;overflow-x:auto;margin:0 0 20px;border:1px solid var(--code-line);
+    font-family:var(--mono);font-size:14px;line-height:1.6}
+  pre .lang{display:block;color:#8a857d;font-size:11px;text-transform:uppercase;
+    letter-spacing:.12em;margin-bottom:10px}
+  code{font-family:var(--mono)}
+  p code,li code{background:#f0eeec;padding:1px 6px;border-radius:5px;font-size:14px}
+
+  .ad{border:1px solid var(--line);border-left:3px solid var(--accent);
+    background:var(--surface);border-radius:10px;padding:20px 22px;margin:30px 0}
+  .ad .tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:.12em;color:var(--muted);margin-bottom:8px}
+  .ad .name{font-weight:750;font-size:18px;margin-bottom:4px}
+  .ad p{font-size:15px;color:#4a4540;margin:0 0 14px}
+  .ad a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+    font-weight:650;font-size:15px;padding:10px 18px;border-radius:8px}
+  .ad a.btn:hover{background:var(--accent-ink)}
+  .ad .disc{font-family:var(--mono);font-size:11px;color:var(--muted);margin:10px 0 0}
+
+  .faq{margin:42px 0 0;border-top:1px solid var(--line);padding-top:30px}
+  .faq h2{margin-top:0}
+  .faq .q{font-weight:700;margin:20px 0 6px}
+  .faq .a{color:#4a4540;margin:0}
+
+  .related{margin:42px 0 0;border-top:1px solid var(--line);padding-top:24px}
+  .related .eyebrow{margin-top:0}
+  .related a{display:block;padding:11px 0;border-bottom:1px solid var(--line);
+    text-decoration:none;color:var(--ink);font-weight:600}
+  .related a:hover{color:var(--accent-ink)}
+  .related a span{font-family:var(--mono);color:var(--accent);margin-right:10px;font-size:14px}
+
+  footer.site{border-top:1px solid var(--line);margin-top:60px;padding:30px 0 50px;
+    font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+
+  .draft{background:#fff8e6;border:1px solid #f0d98a;border-radius:8px;padding:12px 16px;
+    font-family:var(--mono);font-size:13px;color:#7a5c00;margin:0 0 22px}
+
+  @media (max-width:520px){ h1{font-size:27px} body{font-size:16px} }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="index.html">{{SITE_PREFIX}}<b>{{SITE_SUFFIX}}</b></a>
+    <span class="nav-mono">{{TAGLINE}}</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="crumbs"><a href="index.html">home</a> <span>/</span> {{TYPE}} <span>/</span> {{SLUG}}</nav>
+  <div class="eyebrow">{{TYPE_LABEL}}</div>
+  <h1>{{H1}}</h1>
+  {{DRAFT_NOTICE}}
+  <p class="intro">{{INTRO}}</p>
+  <p class="meta-line">updated {{UPDATED}} · by {{AUTHOR}}</p>
+
+  <article>
+    {{BODY}}
+    {{AD}}
+    {{FAQ}}
+  </article>
+
+  {{RELATED}}
+</main>
+
+<footer class="site">
+  <div class="wrap">{{SITE_NAME}} · independent guides for Laravel developers · {{YEAR}}</div>
+</footer>
+</body>
+</html>

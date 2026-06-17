@@ -1,0 +1,907 @@
+{
+  "site": {
+    "name": "LaravelDeploy",
+    "tagline": "Deploy, fix, and ship Laravel — fast.",
+    "base_url": "https://nassimcodedev.github.io/laravel-deploy",
+    "author": "CODNET",
+    "lang": "en"
+  },
+
+  "affiliates": {
+    "cloudways": {
+      "name": "Cloudways",
+      "url": "https://cloudways.com/?aff=YOUR_ID",
+      "blurb": "Managed cloud hosting that runs Laravel without server headaches — pre-tuned PHP, free SSL, one-click staging.",
+      "cta": "Try Cloudways free for 3 days",
+      "payout": "Up to $125 per signup (or 30% recurring)"
+    },
+    "hostinger": {
+      "name": "Hostinger VPS",
+      "url": "https://hostinger.com/vps?REFERRALCODE=YOUR_ID",
+      "blurb": "Cheap, fast VPS with a Laravel-ready template — good when you want full control on a student budget.",
+      "cta": "Get a Laravel VPS",
+      "payout": "Up to $100 per sale"
+    },
+    "digitalocean": {
+      "name": "DigitalOcean",
+      "url": "https://digitalocean.com/?refcode=YOUR_ID",
+      "blurb": "Raw droplets with $200 in starting credit — the classic VPS choice when you want to learn the server side.",
+      "cta": "Claim $200 in credit",
+      "payout": "$25 per qualified signup"
+    }
+  },
+
+  "pages": [
+    {
+      "slug": "deploy-laravel-app-cloudways",
+      "type": "deploy",
+      "h1": "How to deploy a Laravel app on Cloudways (2026)",
+      "title": "Deploy a Laravel App on Cloudways — Step by Step (2026)",
+      "meta_description": "A clear, copy-paste guide to deploying a Laravel 11 app on Cloudways: server setup, Git deploy, .env, migrations, queue workers, and SSL.",
+      "keywords": ["deploy laravel cloudways", "laravel cloudways tutorial", "host laravel app cloudways"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-16",
+      "intro": "Cloudways is the path of least resistance for a Laravel app: the PHP version, Composer, and the web server are already tuned, so you skip the part where you fight Nginx at 2 a.m. This guide takes you from a fresh server to a live app with migrations, queues, and HTTPS — no prior server experience assumed.",
+      "blocks": [
+        {"type": "h2", "text": "1. Launch a server and application"},
+        {"type": "p", "text": "After signing up, create a server and pick the PHP stack. Choose a provider region close to your users and the smallest plan to start — you can scale later without rebuilding. Cloudways provisions an 'application' slot for you, which is where your Laravel code will live."},
+        {"type": "p", "text": "Once the server is up, note the public IP, the SSH/SFTP credentials, and the application's public path (it ends in /public_html — your Laravel public/ folder maps here)."},
+        {"type": "h2", "text": "2. Push your code with Git"},
+        {"type": "p", "text": "From the application dashboard, open the Deployment via Git panel, add your repository SSH key, and pull the main branch. This is cleaner than SFTP because every future deploy is one click."},
+        {"type": "code", "lang": "bash", "text": "# locally, make sure your repo is clean\ngit add .\ngit commit -m \"production build\"\ngit push origin main\n\n# then in Cloudways: Deployment via Git > Pull"},
+        {"type": "h2", "text": "3. Configure the environment"},
+        {"type": "p", "text": "SSH into the server and set up your .env. Never commit secrets — generate the app key on the server."},
+        {"type": "code", "lang": "bash", "text": "cp .env.example .env\nnano .env   # set APP_ENV=production, APP_DEBUG=false, DB_*, etc.\nphp artisan key:generate\ncomposer install --optimize-autoloader --no-dev"},
+        {"type": "h2", "text": "4. Migrate and cache"},
+        {"type": "code", "lang": "bash", "text": "php artisan migrate --force\nphp artisan config:cache\nphp artisan route:cache\nphp artisan view:cache"},
+        {"type": "p", "text": "The --force flag is required in production because Laravel asks for confirmation otherwise. Caching config and routes gives a real speed bump on every request."},
+        {"type": "h2", "text": "5. Queues and scheduled tasks"},
+        {"type": "p", "text": "If your app sends mail or processes jobs, add a queue worker as a Supervisor process from the dashboard, and point the cron at the scheduler so anything in your Kernel runs on time."},
+        {"type": "code", "lang": "bash", "text": "* * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1"},
+        {"type": "h2", "text": "6. Add a domain and SSL"},
+        {"type": "p", "text": "Point your domain's A record at the server IP, add the domain in the dashboard, then enable the free Let's Encrypt certificate. Set APP_URL in .env to the https domain and re-run config:cache."}
+      ],
+      "faq": [
+        {"q": "Which PHP version should I pick for Laravel 11?", "a": "Laravel 11 requires PHP 8.2 or higher. Pick 8.3 on Cloudways for the best balance of speed and library support in 2026."},
+        {"q": "Do I need a separate database server?", "a": "No. The MySQL (or MariaDB) instance ships on the same server. Create the database from the dashboard and copy the credentials into your .env."},
+        {"q": "My CSS/JS isn't loading after deploy — why?", "a": "You likely didn't build assets. Run 'npm install && npm run build' locally and commit the compiled files, or run the build step on the server."}
+      ],
+      "related": ["best-laravel-hosting-2026", "deploy-laravel-app-hostinger-vps", "fix-laravel-500-error-after-deploy", "how-to-set-up-queues-in-laravel"]
+    },
+
+    {
+      "slug": "deploy-laravel-app-hostinger-vps",
+      "type": "deploy",
+      "h1": "How to deploy a Laravel app on a Hostinger VPS (2026)",
+      "title": "Deploy Laravel on a Hostinger VPS — Beginner Guide (2026)",
+      "meta_description": "Deploy a Laravel 11 app on a cheap Hostinger VPS: install PHP, Composer, Nginx, set up the site, run migrations, and add a free SSL certificate.",
+      "keywords": ["deploy laravel hostinger vps", "laravel hostinger tutorial", "cheap laravel hosting"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-16",
+      "intro": "A VPS is the budget move when you want control and the lowest monthly bill — perfect on a student budget. The trade-off is you set up the server yourself. This guide does exactly that on a Hostinger VPS, command by command, with nothing assumed.",
+      "blocks": [
+        {"type": "h2", "text": "1. Spin up the VPS"},
+        {"type": "p", "text": "Create a VPS and choose the Ubuntu 24.04 image (or the pre-built Laravel/LEMP template if offered — it saves the next two steps). Set a root password and note the IP address."},
+        {"type": "h2", "text": "2. Install the stack"},
+        {"type": "code", "lang": "bash", "text": "ssh root@YOUR_SERVER_IP\napt update && apt upgrade -y\napt install -y nginx php8.3-fpm php8.3-mysql php8.3-mbstring \\\n  php8.3-xml php8.3-curl php8.3-zip unzip git\n\n# Composer\ncurl -sS https://getcomposer.org/installer | php\nmv composer.phar /usr/local/bin/composer"},
+        {"type": "h2", "text": "3. Pull the code"},
+        {"type": "code", "lang": "bash", "text": "cd /var/www\ngit clone https://github.com/you/your-app.git\ncd your-app\ncomposer install --optimize-autoloader --no-dev\ncp .env.example .env\nphp artisan key:generate"},
+        {"type": "h2", "text": "4. Point Nginx at public/"},
+        {"type": "p", "text": "The single most common beginner mistake is serving the project root instead of the public/ folder. Your Nginx root must end in /public."},
+        {"type": "code", "lang": "nginx", "text": "server {\n    listen 80;\n    server_name yourdomain.com;\n    root /var/www/your-app/public;\n    index index.php;\n\n    location / {\n        try_files $uri $uri/ /index.php?$query_string;\n    }\n    location ~ \\.php$ {\n        fastcgi_pass unix:/run/php/php8.3-fpm.sock;\n        include fastcgi_params;\n        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n    }\n}"},
+        {"type": "h2", "text": "5. Permissions, migrate, SSL"},
+        {"type": "code", "lang": "bash", "text": "chown -R www-data:www-data storage bootstrap/cache\nphp artisan migrate --force\n\n# free SSL\napt install -y certbot python3-certbot-nginx\ncertbot --nginx -d yourdomain.com"}
+      ],
+      "faq": [
+        {"q": "VPS or managed hosting for a first Laravel deploy?", "a": "If you want to learn the server side, a VPS teaches you the most for the lowest cost. If you just want the app live with zero server admin, managed hosting is faster."},
+        {"q": "I get '502 Bad Gateway' — what's wrong?", "a": "Almost always the PHP-FPM socket path in your Nginx config doesn't match your PHP version. Check 'ls /run/php/' and update fastcgi_pass to the socket that exists."}
+      ],
+      "related": ["best-laravel-hosting-2026", "deploy-laravel-app-cloudways", "fix-laravel-permissions-storage-error", "fix-laravel-500-error-after-deploy"]
+    },
+
+    {
+      "slug": "fix-laravel-500-error-after-deploy",
+      "type": "fix",
+      "h1": "How to fix a Laravel 500 error after deploying",
+      "title": "Fix the Laravel 500 Error After Deploy (Checklist)",
+      "meta_description": "A blank 500 page after deploying Laravel almost always comes down to five things. Work through this checklist to find and fix the cause in minutes.",
+      "keywords": ["laravel 500 error after deploy", "laravel blank page production", "laravel 500 internal server error"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-16",
+      "intro": "A 500 error with a blank page after deploy is Laravel hiding the real exception because APP_DEBUG is off (correctly). The fix is to find the real error in the logs, then resolve one of a handful of common causes. Here's the checklist in the order that finds it fastest.",
+      "blocks": [
+        {"type": "h2", "text": "First: read the actual error"},
+        {"type": "code", "lang": "bash", "text": "tail -n 50 storage/logs/laravel.log"},
+        {"type": "p", "text": "Whatever the blank page hides is written here. If the log is empty or unwritable, that itself is the problem — jump to the permissions section."},
+        {"type": "h2", "text": "Cause 1 — Missing or stale app key"},
+        {"type": "code", "lang": "bash", "text": "php artisan key:generate\nphp artisan config:clear"},
+        {"type": "h2", "text": "Cause 2 — Storage / cache not writable"},
+        {"type": "code", "lang": "bash", "text": "chmod -R 775 storage bootstrap/cache\nchown -R www-data:www-data storage bootstrap/cache"},
+        {"type": "h2", "text": "Cause 3 — Stale cached config pointing at the old environment"},
+        {"type": "code", "lang": "bash", "text": "php artisan config:clear\nphp artisan cache:clear\nphp artisan config:cache"},
+        {"type": "h2", "text": "Cause 4 — Composer dev dependencies missing"},
+        {"type": "p", "text": "If you deployed with --no-dev but your code references a dev-only package, you'll 500. Move the package out of require-dev or reinstall."},
+        {"type": "h2", "text": "Cause 5 — Wrong document root"},
+        {"type": "p", "text": "If the web server points at the project root instead of public/, framework files leak and routing breaks. Confirm the root ends in /public."}
+      ],
+      "faq": [
+        {"q": "Should I just set APP_DEBUG=true to see the error?", "a": "Temporarily, on a server only you can reach, yes — it shows the stack trace. Turn it back off immediately; leaving debug on in production leaks secrets and file paths."},
+        {"q": "It works locally but 500s in production. Why?", "a": "The difference is almost always environment: a missing .env value, a cached config from another environment, or file permissions. The log will name the specific one."}
+      ],
+      "related": ["fix-laravel-permissions-storage-error", "deploy-laravel-app-cloudways", "deploy-laravel-app-hostinger-vps"]
+    },
+
+    {
+      "slug": "livewire-vs-inertia-laravel",
+      "type": "compare",
+      "h1": "Livewire vs Inertia for Laravel: which to choose in 2026",
+      "title": "Livewire vs Inertia (2026): Picking a Laravel Frontend",
+      "meta_description": "A practical comparison of Livewire and Inertia.js for Laravel apps in 2026 — how each works, when each wins, and how to decide for your project.",
+      "keywords": ["livewire vs inertia", "laravel frontend 2026", "livewire or inertia"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-16",
+      "intro": "Both keep you inside Laravel instead of building a separate API and SPA, but they make opposite bets. Livewire renders on the server and ships HTML over the wire; Inertia ships a real JavaScript frontend (Vue or React) that talks to Laravel as the backend. The right pick depends on how much frontend interactivity you actually need.",
+      "blocks": [
+        {"type": "h2", "text": "How Livewire works"},
+        {"type": "p", "text": "You write components in PHP and Blade. Interactions make a round-trip to the server, which re-renders the component and swaps the changed HTML. You barely write JavaScript. This is the fastest way to ship for a PHP-first developer."},
+        {"type": "h2", "text": "How Inertia works"},
+        {"type": "p", "text": "You write Vue or React pages, and Inertia handles the routing glue so there's no separate API layer. You get a genuinely rich client-side app while still using Laravel controllers and Eloquent on the backend."},
+        {"type": "h2", "text": "When Livewire wins"},
+        {"type": "ul", "items": ["You're comfortable in PHP and want minimal JavaScript", "Dashboards, CRUD, and forms — interactivity is moderate", "You want the smallest possible learning curve and toolchain"]},
+        {"type": "h2", "text": "When Inertia wins"},
+        {"type": "ul", "items": ["You already know Vue or React well", "The UI is genuinely app-like: drag-and-drop, heavy client state, offline bits", "You want the frontend to be portable to other backends later"]},
+        {"type": "h2", "text": "The honest default"},
+        {"type": "p", "text": "If you're a backend-leaning Laravel developer shipping a typical SaaS or internal tool, start with Livewire — you'll ship sooner. Reach for Inertia when the interactivity clearly outgrows server round-trips."}
+      ],
+      "faq": [
+        {"q": "Can I use both in one app?", "a": "Yes, but it's rarely worth the complexity. Pick one as the default and only mix if a single screen has very different needs."},
+        {"q": "Which is faster?", "a": "For perceived speed on rich UIs, Inertia (client-side) often feels snappier. For simple pages and time-to-ship, Livewire wins. Hosting and query optimization matter more than the choice for most apps."}
+      ],
+      "related": ["how-to-set-up-queues-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-set-up-queues-in-laravel",
+      "type": "howto",
+      "h1": "How to set up queues in Laravel (with a worker that stays alive)",
+      "title": "Set Up Laravel Queues + a Persistent Worker (2026)",
+      "meta_description": "Configure Laravel queues end to end: choose a driver, dispatch jobs, run a worker with Supervisor so it survives reboots, and monitor failures.",
+      "keywords": ["laravel queue setup", "laravel supervisor worker", "laravel jobs tutorial"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-16",
+      "intro": "Queues move slow work — sending mail, processing uploads, calling external APIs — out of the request so your app stays fast. The part that trips people up isn't dispatching a job; it's keeping the worker running in production. Here's both.",
+      "blocks": [
+        {"type": "h2", "text": "1. Pick a driver"},
+        {"type": "p", "text": "Set QUEUE_CONNECTION in .env. 'database' is the zero-extra-infrastructure choice and is fine for most apps; 'redis' is faster and scales further if you already run Redis."},
+        {"type": "code", "lang": "bash", "text": "# for the database driver\nphp artisan make:queue-table\nphp artisan migrate"},
+        {"type": "h2", "text": "2. Dispatch a job"},
+        {"type": "code", "lang": "php", "text": "php artisan make:job ProcessUpload"},
+        {"type": "code", "lang": "php", "text": "use App\\Jobs\\ProcessUpload;\n\nProcessUpload::dispatch($upload);"},
+        {"type": "h2", "text": "3. Keep the worker alive with Supervisor"},
+        {"type": "p", "text": "Running 'php artisan queue:work' in a terminal dies when the terminal closes. Supervisor restarts it automatically and on reboot."},
+        {"type": "code", "lang": "ini", "text": "[program:laravel-worker]\ncommand=php /var/www/your-app/artisan queue:work --sleep=3 --tries=3\nautostart=true\nautorestart=true\nuser=www-data\nnumprocs=1\nredirect_stderr=true\nstdout_logfile=/var/www/your-app/storage/logs/worker.log"},
+        {"type": "h2", "text": "4. Always restart workers after deploy"},
+        {"type": "p", "text": "Workers hold your code in memory, so old code keeps running until you restart them. Add this to your deploy script:"},
+        {"type": "code", "lang": "bash", "text": "php artisan queue:restart"}
+      ],
+      "faq": [
+        {"q": "Why does my job run old code after I deploy?", "a": "The worker booted with the previous version in memory. Run 'php artisan queue:restart' at the end of every deploy."},
+        {"q": "How do I see failed jobs?", "a": "Failed jobs land in the failed_jobs table. View them with 'php artisan queue:failed' and retry with 'php artisan queue:retry all'."}
+      ],
+      "related": ["deploy-laravel-app-cloudways", "livewire-vs-inertia-laravel", "fix-laravel-500-error-after-deploy"]
+    },
+
+    {
+      "slug": "fix-laravel-permissions-storage-error",
+      "type": "fix",
+      "h1": "Fix Laravel 'failed to open stream: Permission denied' on storage",
+      "title": "Fix Laravel Storage Permission Denied Error",
+      "meta_description": "The storage permission error after deploy comes from the web server not owning storage/ and bootstrap/cache/. Here's the correct, safe fix.",
+      "keywords": ["laravel permission denied storage", "laravel failed to open stream", "laravel storage writable"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-16",
+      "intro": "This error means the user running PHP (usually www-data) can't write to storage/ or bootstrap/cache/. The fix is to give ownership to the web server user — not to chmod 777, which is the common but insecure 'fix' you'll see in forum answers.",
+      "blocks": [
+        {"type": "h2", "text": "The correct fix"},
+        {"type": "code", "lang": "bash", "text": "sudo chown -R www-data:www-data storage bootstrap/cache\nsudo chmod -R 775 storage bootstrap/cache"},
+        {"type": "h2", "text": "Why not 777?"},
+        {"type": "p", "text": "777 lets any user on the server write to your app's storage, which is a real security risk. 775 with correct ownership gives the web server write access and keeps everyone else out."},
+        {"type": "h2", "text": "If it comes back after deploy"},
+        {"type": "p", "text": "A Git pull can reset ownership on new files. Add the chown line to the end of your deploy script so permissions are always correct after a release."}
+      ],
+      "faq": [
+        {"q": "How do I know which user runs PHP?", "a": "Run 'ps aux | grep php-fpm'. The user column on the worker processes is the one that needs to own storage — commonly www-data on Ubuntu."}
+      ],
+      "related": ["fix-laravel-500-error-after-deploy", "deploy-laravel-app-hostinger-vps"]
+    },
+
+    {
+      "slug": "deploy-laravel-app-digitalocean",
+      "type": "deploy",
+      "h1": "How to deploy a Laravel app on a DigitalOcean droplet (2026)",
+      "title": "Deploy Laravel on a DigitalOcean Droplet — Full Guide (2026)",
+      "meta_description": "Deploy a Laravel 11 app on a DigitalOcean droplet from scratch: create the droplet, install the LEMP stack, deploy your code, run migrations, and add free SSL.",
+      "keywords": ["deploy laravel digitalocean", "laravel droplet tutorial", "laravel digitalocean nginx"],
+      "affiliate": "digitalocean",
+      "updated": "2026-06-17",
+      "intro": "A DigitalOcean droplet gives you a clean Ubuntu box and full control for a few dollars a month — and new accounts start with credit (around $200) that covers months of learning for free. The cost is that you build the stack yourself. This guide does it end to end on a fresh droplet, with every command spelled out.",
+      "blocks": [
+        {"type": "h2", "text": "1. Create the droplet"},
+        {"type": "p", "text": "Create a droplet with the Ubuntu 24.04 LTS image and the cheapest shared-CPU plan to start. Add your SSH key during creation so you can log in without a password, pick a region near your users, and note the public IP once it boots."},
+        {"type": "h2", "text": "2. Install the LEMP stack"},
+        {"type": "p", "text": "Log in as root and install Nginx, PHP 8.3 with the extensions Laravel needs, and MySQL. Composer comes next."},
+        {"type": "code", "lang": "bash", "text": "ssh root@YOUR_DROPLET_IP\napt update && apt upgrade -y\napt install -y nginx mysql-server git unzip \\\n  php8.3-fpm php8.3-mysql php8.3-mbstring php8.3-xml \\\n  php8.3-curl php8.3-zip php8.3-bcmath\n\ncurl -sS https://getcomposer.org/installer | php\nmv composer.phar /usr/local/bin/composer"},
+        {"type": "h2", "text": "3. Create the database"},
+        {"type": "code", "lang": "bash", "text": "mysql -e \"CREATE DATABASE app;\"\nmysql -e \"CREATE USER 'app'@'localhost' IDENTIFIED BY 'a-strong-password';\"\nmysql -e \"GRANT ALL ON app.* TO 'app'@'localhost'; FLUSH PRIVILEGES;\""},
+        {"type": "h2", "text": "4. Pull and configure the app"},
+        {"type": "code", "lang": "bash", "text": "cd /var/www\ngit clone https://github.com/you/your-app.git\ncd your-app\ncomposer install --optimize-autoloader --no-dev\ncp .env.example .env\nphp artisan key:generate\n# edit .env: APP_ENV=production, APP_DEBUG=false,\n# DB_DATABASE=app, DB_USERNAME=app, DB_PASSWORD=...\nphp artisan migrate --force"},
+        {"type": "h2", "text": "5. Point Nginx at public/"},
+        {"type": "p", "text": "The classic mistake is serving the project root. The Nginx root must end in /public, and PHP requests must be handed to the php8.3-fpm socket."},
+        {"type": "code", "lang": "nginx", "text": "server {\n    listen 80;\n    server_name yourdomain.com;\n    root /var/www/your-app/public;\n    index index.php;\n\n    location / {\n        try_files $uri $uri/ /index.php?$query_string;\n    }\n    location ~ \\.php$ {\n        fastcgi_pass unix:/run/php/php8.3-fpm.sock;\n        include fastcgi_params;\n        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n    }\n}"},
+        {"type": "code", "lang": "bash", "text": "chown -R www-data:www-data storage bootstrap/cache\nln -s /etc/nginx/sites-available/your-app /etc/nginx/sites-enabled/\nnginx -t && systemctl reload nginx"},
+        {"type": "h2", "text": "6. Add a domain and free SSL"},
+        {"type": "p", "text": "Point your domain's A record at the droplet IP, then let Certbot issue and auto-renew a free certificate."},
+        {"type": "code", "lang": "bash", "text": "apt install -y certbot python3-certbot-nginx\ncertbot --nginx -d yourdomain.com"}
+      ],
+      "faq": [
+        {"q": "Should I use a droplet or App Platform?", "a": "A droplet teaches you the server and is cheapest, especially with the starting credit. App Platform is managed and faster to set up but costs more and gives less control. For learning Laravel deployment, start with a droplet."},
+        {"q": "Do I need Laravel Forge for this?", "a": "No — the steps above are the whole job. Forge just automates them and manages the server for you, which is worth it once you run several sites and don't want to repeat this by hand."},
+        {"q": "How do I deploy updates after the first time?", "a": "SSH in, 'git pull', run 'composer install --no-dev', 'php artisan migrate --force', then cache config and routes. Automate it with a deploy script or GitHub Actions."}
+      ],
+      "related": ["deploy-laravel-app-hostinger-vps", "deploy-laravel-with-github-actions", "fix-laravel-permissions-storage-error"]
+    },
+
+    {
+      "slug": "best-laravel-hosting-2026",
+      "type": "compare",
+      "h1": "The best Laravel hosting in 2026 (honest comparison)",
+      "title": "Best Laravel Hosting in 2026 — Managed vs VPS Compared",
+      "meta_description": "A practical, no-hype comparison of the best ways to host a Laravel app in 2026 — managed (Cloudways), cheap VPS (Hostinger), and raw droplets (DigitalOcean) — with a clear pick for each situation.",
+      "keywords": ["best laravel hosting 2026", "laravel hosting comparison", "where to host laravel app"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "There's no single 'best' Laravel host — there's the best one for how much server work you want to do. The real choice is between managed hosting (you never touch the server), a cheap VPS (you set it up once), and raw droplets (you control everything). Here's how the three main options actually compare, and which to pick.",
+      "blocks": [
+        {"type": "h2", "text": "What Laravel actually needs from a host"},
+        {"type": "ul", "items": ["PHP 8.2+ with the common extensions (mbstring, xml, curl, pdo)", "Shell access to run Composer and 'php artisan' commands — not plain shared hosting", "A database (MySQL/MariaDB or PostgreSQL)", "The ability to run a queue worker and the scheduler (cron)", "The web root pointed at public/, plus free SSL"]},
+        {"type": "p", "text": "That list is why cheap shared hosting without SSH is a bad fit: you can't run artisan, workers, or the scheduler properly. Every option below clears that bar."},
+        {"type": "h2", "text": "Option 1 — Managed cloud (Cloudways): least server work"},
+        {"type": "p", "text": "Cloudways runs on top of providers like DigitalOcean and AWS but handles the server for you: PHP is pre-tuned, SSL is one click, and staging and Git deploy are built in — no Nginx config to write. You pay more than a raw VPS but spend zero time on server admin, the right trade when your time is worth more than a few dollars a month."},
+        {"type": "p", "text": "Pick it if: you want the app live today, you don't want to learn server administration yet, or you do client work and need staging and easy backups."},
+        {"type": "h2", "text": "Option 2 — Cheap VPS (Hostinger): lowest bill, set up once"},
+        {"type": "p", "text": "A Hostinger VPS is the budget-control option: you install the LEMP stack yourself once, then it's yours for a low monthly price. Some plans ship a Laravel/LEMP template that skips most of the setup. More work than managed, far cheaper over time."},
+        {"type": "p", "text": "Pick it if: you're on a tight budget, you want to learn the server side, and you're comfortable running a handful of setup commands."},
+        {"type": "h2", "text": "Option 3 — Raw droplet (DigitalOcean): most control, credit to start"},
+        {"type": "p", "text": "A DigitalOcean droplet is a clean Ubuntu box with nothing assumed. You get total control, and the new-account credit (around $200) covers months of a small droplet for free — ideal for learning. Pair it with Laravel Forge later if you want managed convenience without leaving the provider."},
+        {"type": "p", "text": "Pick it if: you want to understand every layer, you're experimenting on the free credit, or you plan to manage the server with Forge."},
+        {"type": "h2", "text": "The honest recommendation"},
+        {"type": "ul", "items": ["Want it live with no server work → Cloudways (managed).", "Tight budget, willing to set it up once → Hostinger VPS.", "Learning the stack or using free credit → DigitalOcean droplet."]},
+        {"type": "p", "text": "If you're not sure, start managed: the time you save on server admin in the first month is worth more than the price difference, and you can always move to a raw VPS once you know exactly what you need."}
+      ],
+      "faq": [
+        {"q": "Can I host Laravel on cheap shared hosting?", "a": "Sometimes, but it's painful: most shared plans lack SSH, Composer, and a way to run queue workers and the scheduler. Use a managed cloud or a VPS instead — both are affordable and built for apps like Laravel."},
+        {"q": "Is managed hosting worth the extra cost?", "a": "If your time has any value, usually yes early on. You skip server setup, security patching, and SSL config. Move to a raw VPS later when you want the lower bill and know the stack."},
+        {"q": "Which is fastest?", "a": "Raw performance is similar across all three on comparable hardware — they all run the same PHP. Your database queries, caching, and whether you ran 'config:cache' and 'route:cache' matter far more than the host's brand."}
+      ],
+      "related": ["deploy-laravel-app-cloudways", "deploy-laravel-app-hostinger-vps", "deploy-laravel-app-digitalocean"]
+    },
+
+    {
+      "slug": "fix-419-page-expired-laravel",
+      "type": "fix",
+      "h1": "How to fix the '419 Page Expired' error in Laravel",
+      "title": "Fix Laravel '419 Page Expired' — Causes and Solutions",
+      "meta_description": "The Laravel 419 Page Expired error is a CSRF/session mismatch. Here are the real causes — missing token, expired session, wrong cookie domain, AJAX header, unwritable storage — and how to fix each.",
+      "keywords": ["laravel 419 page expired", "419 page expired post", "laravel csrf token mismatch"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "A '419 Page Expired' response means Laravel rejected the request's CSRF token — either it was missing, or the session that would validate it couldn't be found. It almost always shows up on form submits and logins. Here are the causes in the order that finds it fastest.",
+      "blocks": [
+        {"type": "h2", "text": "What 419 actually means"},
+        {"type": "p", "text": "419 is Laravel's own status for a failed CSRF check (handled by the VerifyCsrfToken middleware). The token sent with the request didn't match the one tied to the user's session. So the fix is always one of two things: the token wasn't sent, or the session wasn't readable."},
+        {"type": "h2", "text": "Cause 1 — Missing @csrf in the form"},
+        {"type": "p", "text": "Every non-GET HTML form needs the token. If you wrote a form by hand without it, you'll get a 419 on submit."},
+        {"type": "code", "lang": "php", "text": "<form method=\"POST\" action=\"/save\">\n    @csrf\n    <!-- fields -->\n</form>"},
+        {"type": "h2", "text": "Cause 2 — Stale token on a page left open"},
+        {"type": "p", "text": "If a login page sat open past the session lifetime, its token expired — that is the literal 'page expired'. Reloading issues a fresh token. To make it less annoying for users, raise SESSION_LIFETIME in .env."},
+        {"type": "h2", "text": "Cause 3 — Session cookie can't be set (domain / HTTPS mismatch)"},
+        {"type": "p", "text": "If the session cookie isn't stored, every request looks token-less. After a deploy this is usually a config mismatch: SESSION_DOMAIN doesn't match your real domain, or SESSION_SECURE_COOKIE is true while you're still testing over plain HTTP."},
+        {"type": "code", "lang": "bash", "text": "# .env — match your real domain, only force secure cookies on HTTPS\nSESSION_DOMAIN=yourdomain.com\nSESSION_SECURE_COOKIE=true   # set false if you're not on HTTPS yet\nAPP_URL=https://yourdomain.com"},
+        {"type": "h2", "text": "Cause 4 — AJAX/SPA requests without the token header"},
+        {"type": "p", "text": "JavaScript requests must send the token in the X-CSRF-TOKEN header. Expose it in a meta tag and attach it to your HTTP client."},
+        {"type": "code", "lang": "html", "text": "<meta name=\"csrf-token\" content=\"{{ csrf_token() }}\">"},
+        {"type": "code", "lang": "js", "text": "axios.defaults.headers.common['X-CSRF-TOKEN'] =\n  document.querySelector('meta[name=\"csrf-token\"]').content;"},
+        {"type": "h2", "text": "Cause 5 — Session storage not writable"},
+        {"type": "p", "text": "With the 'file' session driver, an unwritable storage/framework/sessions directory means no session is ever saved, so the token can never validate. Fix permissions, or move to a shared driver (database/redis) if you run more than one server."},
+        {"type": "code", "lang": "bash", "text": "chmod -R 775 storage bootstrap/cache\nchown -R www-data:www-data storage bootstrap/cache\nphp artisan config:clear"}
+      ],
+      "faq": [
+        {"q": "Why does 419 only happen in production, not locally?", "a": "Locally you're usually on http://localhost with relaxed cookie settings. In production a wrong SESSION_DOMAIN, a secure-cookie flag over HTTP, or unwritable session storage breaks the cookie — so the token can't be validated."},
+        {"q": "Does raising SESSION_LIFETIME fix it for good?", "a": "Only the 'left the page open too long' case. If the cause is a missing token, the cookie domain, or permissions, a longer lifetime changes nothing — fix the actual cause above."}
+      ],
+      "related": ["fix-laravel-500-error-after-deploy", "fix-laravel-permissions-storage-error", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "deploy-laravel-with-github-actions",
+      "type": "howto",
+      "h1": "How to deploy Laravel automatically with GitHub Actions",
+      "title": "Deploy Laravel with GitHub Actions — CI/CD over SSH (2026)",
+      "meta_description": "Set up a GitHub Actions workflow that tests and deploys your Laravel app to a VPS over SSH on every push: run tests, deploy, migrate, and restart the queue worker.",
+      "keywords": ["laravel github actions deploy", "laravel ci cd", "deploy laravel over ssh"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-17",
+      "intro": "Manually SSHing in to 'git pull' on every change gets old fast and is easy to get wrong. A GitHub Actions workflow runs your tests and then deploys to your server automatically on every push to main — the same steps you'd type by hand, but reliable and logged. Here's a complete setup for a VPS.",
+      "blocks": [
+        {"type": "h2", "text": "1. Add deploy secrets to the repo"},
+        {"type": "p", "text": "In your GitHub repo, open Settings → Secrets and variables → Actions and add the server host, user, and a private SSH key that's authorized on the server. Never put these in the workflow file itself."},
+        {"type": "ul", "items": ["SSH_HOST — your server IP or domain", "SSH_USER — the deploy user (e.g. a dedicated 'deployer')", "SSH_KEY — the private key whose public half is in the server's authorized_keys"]},
+        {"type": "h2", "text": "2. Create the workflow file"},
+        {"type": "p", "text": "Add this as .github/workflows/deploy.yml. It runs the test suite first and only deploys if tests pass."},
+        {"type": "code", "lang": "yaml", "text": "name: Deploy\n\non:\n  push:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: shivammathur/setup-php@v2\n        with:\n          php-version: '8.3'\n      - run: composer install --no-interaction --prefer-dist\n      - run: cp .env.example .env && php artisan key:generate\n      - run: php artisan test\n\n  deploy:\n    needs: test\n    runs-on: ubuntu-latest\n    steps:\n      - name: Deploy over SSH\n        uses: appleboy/ssh-action@v1.0.3\n        with:\n          host: ${{ secrets.SSH_HOST }}\n          username: ${{ secrets.SSH_USER }}\n          key: ${{ secrets.SSH_KEY }}\n          script: |\n            cd /var/www/your-app\n            git pull origin main\n            composer install --optimize-autoloader --no-dev\n            php artisan migrate --force\n            php artisan config:cache\n            php artisan route:cache\n            php artisan queue:restart"},
+        {"type": "h2", "text": "3. Why each deploy step matters"},
+        {"type": "ul", "items": ["'migrate --force' applies schema changes without an interactive prompt.", "'config:cache' and 'route:cache' rebuild caches so they don't serve old values.", "'queue:restart' is critical — workers hold old code in memory until you restart them."]},
+        {"type": "h2", "text": "4. Push and watch it run"},
+        {"type": "p", "text": "Commit the workflow, push to main, and open the Actions tab. You'll see the test job run, then the deploy job. From now on, shipping is just 'git push' — exactly the low-effort loop you want."},
+        {"type": "code", "lang": "bash", "text": "git add .github/workflows/deploy.yml\ngit commit -m \"add CI/CD deploy\"\ngit push origin main"}
+      ],
+      "faq": [
+        {"q": "Should deploy run if tests fail?", "a": "No. The 'needs: test' line makes the deploy job wait for tests to pass, so a broken commit never reaches the server. That safety is the main reason to use CI/CD over a manual pull."},
+        {"q": "How do I avoid downtime during deploy?", "a": "For true zero-downtime, deploy into a new release folder and switch a 'current' symlink (the approach Deployer and Laravel Envoyer use). The pull-in-place workflow here is simpler and fine for small apps; add atomic releases when traffic grows."},
+        {"q": "What user should run the deploy?", "a": "A dedicated deploy user with write access to the app directory is cleanest. Keep file ownership correct so the web server can read the code and write to storage/."}
+      ],
+      "related": ["deploy-laravel-app-hostinger-vps", "deploy-laravel-app-digitalocean", "how-to-set-up-queues-in-laravel"]
+    },
+
+    {
+      "slug": "fix-vite-manifest-not-found-laravel",
+      "type": "fix",
+      "h1": "How to fix 'Vite manifest not found' in Laravel",
+      "title": "Fix 'Vite manifest not found' in Laravel — Causes & Fix",
+      "meta_description": "The 'Vite manifest not found' error means Laravel can't find public/build/manifest.json. Here's why it happens after deploy and how to fix it for good.",
+      "keywords": ["vite manifest not found laravel", "unable to locate file in vite manifest", "laravel vite build production"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "This error means the @vite directive looked for public/build/manifest.json and it wasn't there. That file is created only when you compile your assets with Vite — so the fix is almost always 'build the assets and make sure the compiled files actually reach the server.' Here's the full picture.",
+      "blocks": [
+        {"type": "h2", "text": "What the manifest is"},
+        {"type": "p", "text": "Laravel's @vite() Blade directive reads public/build/manifest.json to know which compiled CSS/JS to load. That file exists only after a production build; in local development the Vite dev server serves assets instead, which is why you never see this error there."},
+        {"type": "h2", "text": "Cause 1 — You never built the assets"},
+        {"type": "p", "text": "On the server (or in CI) run the production build — you need Node installed. This creates public/build/, including manifest.json."},
+        {"type": "code", "lang": "bash", "text": "npm install\nnpm run build"},
+        {"type": "h2", "text": "Cause 2 — public/build was never deployed"},
+        {"type": "p", "text": "If you build locally but public/build is git-ignored (the Laravel default ignores it), the compiled files never reach production. Either build on the server, or build in CI and ship public/build with the deploy."},
+        {"type": "h2", "text": "Cause 3 — A stale 'hot' file from dev mode"},
+        {"type": "p", "text": "If a leftover public/hot file exists, Laravel tries to load assets from the Vite dev server — which isn't running in production. Delete it."},
+        {"type": "code", "lang": "bash", "text": "rm -f public/hot"},
+        {"type": "h2", "text": "The reliable fix — build during deploy"},
+        {"type": "p", "text": "The cleanest setup builds assets on every deploy so production always has a fresh manifest. Add it to your deploy script:"},
+        {"type": "code", "lang": "bash", "text": "npm ci\nnpm run build\nphp artisan view:cache"}
+      ],
+      "faq": [
+        {"q": "Why does it work locally but break in production?", "a": "Locally you run 'npm run dev', which starts the Vite dev server and writes public/hot — no manifest needed. Production has no dev server, so it requires the compiled public/build/manifest.json from 'npm run build'."},
+        {"q": "Do I commit public/build or build on the server?", "a": "Either works. Building on the server or in CI keeps the repo clean and is the common choice — just make sure Node is available there. Committing the built files is fine too if your host has no Node."}
+      ],
+      "related": ["deploy-laravel-with-github-actions", "fix-laravel-500-error-after-deploy", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "fix-could-not-find-driver-pdo-laravel",
+      "type": "fix",
+      "h1": "How to fix 'could not find driver' (PDO) in Laravel",
+      "title": "Fix Laravel 'could not find driver' — PDO Extension Fix",
+      "meta_description": "Laravel's 'could not find driver' is a PDOException: the database driver extension isn't loaded. Here's how to install and enable the right PDO driver and verify it.",
+      "keywords": ["could not find driver laravel", "laravel pdo could not find driver", "laravel pdo_mysql missing"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-17",
+      "intro": "The 'could not find driver' error is a PDOException: PHP doesn't have the database driver extension loaded for the database you configured. It's most common right after setting up a new server. The fix is to install and enable the right PDO extension, then restart PHP.",
+      "blocks": [
+        {"type": "h2", "text": "What's missing"},
+        {"type": "p", "text": "Laravel talks to your database through PHP's PDO extension. If DB_CONNECTION=mysql but pdo_mysql isn't installed (or you use pgsql/sqlite without their drivers), PHP has no driver to use and throws 'could not find driver'."},
+        {"type": "h2", "text": "Step 1 — Confirm which driver you need"},
+        {"type": "code", "lang": "bash", "text": "grep DB_CONNECTION .env\n# mysql -> pdo_mysql, pgsql -> pdo_pgsql, sqlite -> pdo_sqlite"},
+        {"type": "h2", "text": "Step 2 — Install the extension (Ubuntu/Debian)"},
+        {"type": "code", "lang": "bash", "text": "# MySQL / MariaDB\nsudo apt install -y php8.3-mysql\n\n# PostgreSQL\nsudo apt install -y php8.3-pgsql\n\n# then restart PHP and the web server\nsudo systemctl restart php8.3-fpm nginx"},
+        {"type": "h2", "text": "Step 3 — Verify it's loaded"},
+        {"type": "code", "lang": "bash", "text": "php -m | grep pdo"},
+        {"type": "p", "text": "You should see pdo_mysql (or your driver) in the list. If your app runs under PHP-FPM, install the extension for the same PHP version FPM uses — installing it for the CLI PHP only is a common trap."},
+        {"type": "h2", "text": "If you use SQLite"},
+        {"type": "code", "lang": "bash", "text": "sudo apt install -y php8.3-sqlite3\ntouch database/database.sqlite"}
+      ],
+      "faq": [
+        {"q": "It works on the CLI but not in the browser (or vice-versa)", "a": "CLI PHP and PHP-FPM can be different versions with different extensions. Run 'php -v', check your FPM version, and install the extension for the version your web server actually uses."},
+        {"q": "I'm on managed hosting — how do I enable it?", "a": "Managed hosts like Cloudways ship the common PDO drivers already enabled, which is why you rarely hit this there. On a raw VPS you install them yourself, as above."}
+      ],
+      "related": ["deploy-laravel-app-hostinger-vps", "deploy-laravel-app-digitalocean", "fix-laravel-500-error-after-deploy"]
+    },
+
+    {
+      "slug": "fix-target-class-controller-does-not-exist-laravel",
+      "type": "fix",
+      "h1": "How to fix 'Target class controller does not exist' in Laravel",
+      "title": "Fix 'Target class controller does not exist' in Laravel",
+      "meta_description": "Laravel's 'Target class [Controller] does not exist' is usually the post-Laravel-8 route namespace change, a wrong namespace, or a stale cache. Here's how to fix each.",
+      "keywords": ["target class controller does not exist", "laravel controller does not exist", "laravel route namespace error"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "'Target class [X] does not exist' means the router or container tried to resolve a class it couldn't find. In routes it's almost always the post-Laravel-8 namespace change; elsewhere it's a typo, a missing import, or a stale cache. Here's how to pin it down.",
+      "blocks": [
+        {"type": "h2", "text": "Most common — string controller without the full namespace"},
+        {"type": "p", "text": "Since Laravel 8 there's no automatic App\\Http\\Controllers prefix on route strings. Use the class-based (callable array) syntax — it's the recommended form and your IDE can check it."},
+        {"type": "code", "lang": "php", "text": "use App\\Http\\Controllers\\PostController;\n\nRoute::get('/posts', [PostController::class, 'index']);"},
+        {"type": "p", "text": "If you insist on string syntax, give the full namespace: 'App\\Http\\Controllers\\PostController@index' — or re-add the namespace prefix in your RouteServiceProvider. The class-array form above is cleaner."},
+        {"type": "h2", "text": "Cause 2 — Wrong namespace or filename"},
+        {"type": "p", "text": "A class's namespace must match its folder, and the filename must match the class name exactly (case-sensitive on Linux, even if it worked on Windows/macOS). A controller in app/Http/Controllers/Admin must be namespaced App\\Http\\Controllers\\Admin."},
+        {"type": "h2", "text": "Cause 3 — Composer hasn't picked up the class"},
+        {"type": "code", "lang": "bash", "text": "composer dump-autoload"},
+        {"type": "h2", "text": "Cause 4 — Stale route/config cache"},
+        {"type": "p", "text": "If you cached routes before adding or renaming the controller, the cache still points at the old map."},
+        {"type": "code", "lang": "bash", "text": "php artisan optimize:clear"}
+      ],
+      "faq": [
+        {"q": "It works locally but 500s on the server", "a": "Linux file systems are case-sensitive. 'postcontroller.php' resolves on macOS/Windows but not on a Linux server. Make the filename and class name match exactly, then run 'composer dump-autoload'."}
+      ],
+      "related": ["fix-laravel-500-error-after-deploy", "how-to-build-a-rest-api-with-sanctum-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "fix-sqlstate-1045-access-denied-laravel",
+      "type": "fix",
+      "h1": "How to fix 'SQLSTATE[HY000] [1045] Access denied' in Laravel",
+      "title": "Fix Laravel SQLSTATE 1045 Access Denied (Database)",
+      "meta_description": "SQLSTATE 1045 Access denied is MySQL rejecting Laravel's database credentials. Here's the checklist: wrong .env values, missing user/grants, wrong host, cached config.",
+      "keywords": ["sqlstate 1045 access denied laravel", "laravel access denied for user", "laravel database connection refused"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-17",
+      "intro": "SQLSTATE[HY000] [1045] Access denied is MySQL rejecting the username/password Laravel sent. It's a credentials or privileges problem, not a Laravel bug. After a deploy it's nearly always a .env mismatch or a cached config. Here's the checklist.",
+      "blocks": [
+        {"type": "h2", "text": "Step 1 — Check the credentials in .env"},
+        {"type": "code", "lang": "bash", "text": "grep '^DB_' .env"},
+        {"type": "p", "text": "Confirm DB_DATABASE, DB_USERNAME, and DB_PASSWORD exactly match a MySQL user that exists. A trailing space or stray quote in the password is a classic cause."},
+        {"type": "h2", "text": "Step 2 — Test the login directly"},
+        {"type": "p", "text": "Bypass Laravel and try the exact credentials against MySQL. If this fails, the problem is MySQL, not your app."},
+        {"type": "code", "lang": "bash", "text": "mysql -u your_db_user -p your_db_name"},
+        {"type": "h2", "text": "Step 3 — Create/fix the user and grant access"},
+        {"type": "code", "lang": "bash", "text": "mysql -e \"CREATE USER IF NOT EXISTS 'app'@'localhost' IDENTIFIED BY 'strong-pass';\"\nmysql -e \"GRANT ALL ON your_db_name.* TO 'app'@'localhost'; FLUSH PRIVILEGES;\""},
+        {"type": "h2", "text": "Step 4 — Clear the cached config"},
+        {"type": "p", "text": "Laravel caches .env into config. If you fixed .env but the old values were cached, you'll still get 1045."},
+        {"type": "code", "lang": "bash", "text": "php artisan config:clear\nphp artisan config:cache"},
+        {"type": "h2", "text": "Common gotcha — wrong host"},
+        {"type": "p", "text": "If your database is on another server, 'localhost' won't work and the user must be allowed from your app server's host (e.g. 'app'@'%' or a specific IP). Set DB_HOST to the real database host."}
+      ],
+      "faq": [
+        {"q": "Same credentials work locally but not in production", "a": "Production MySQL has its own users and grants. The user on your laptop doesn't exist on the server. Create the user and grant it access on the production database, then clear the cached config."},
+        {"q": "I changed .env but nothing happened", "a": "You almost certainly have a cached config. Run 'php artisan config:clear' (and re-cache with 'config:cache' in production). Laravel reads cached config before .env when a cache exists."}
+      ],
+      "related": ["deploy-laravel-app-hostinger-vps", "fix-laravel-500-error-after-deploy", "deploy-laravel-app-digitalocean"]
+    },
+
+    {
+      "slug": "how-to-schedule-a-recurring-task-in-laravel",
+      "type": "howto",
+      "h1": "How to schedule a recurring task in Laravel",
+      "title": "How to Schedule Recurring Tasks in Laravel (2026 Guide)",
+      "meta_description": "Set up Laravel's scheduler end to end: define tasks in PHP, add the single cron entry the docs assume you know, test without waiting, and avoid overlapping runs.",
+      "keywords": ["laravel schedule task", "laravel cron job", "laravel task scheduler"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Laravel's scheduler lets you define recurring jobs in PHP instead of editing crontab for each one. You add a single cron entry once, and Laravel runs everything you've scheduled at the right time. Here's the full setup — including the one server step people forget.",
+      "blocks": [
+        {"type": "h2", "text": "1. Define the schedule (Laravel 11)"},
+        {"type": "p", "text": "In Laravel 11 you schedule tasks in routes/console.php with the Schedule facade. Older apps use the schedule() method in app/Console/Kernel.php — the API is the same."},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Support\\Facades\\Schedule;\n\nSchedule::command('emails:send')->dailyAt('07:00');\nSchedule::call(function () {\n    // inline task\n})->hourly();"},
+        {"type": "h2", "text": "2. Or schedule a queued job"},
+        {"type": "code", "lang": "php", "text": "use App\\Jobs\\PruneOldRecords;\n\nSchedule::job(new PruneOldRecords)->weekly();"},
+        {"type": "h2", "text": "3. Add the ONE cron entry on the server"},
+        {"type": "p", "text": "This is the step people miss. The scheduler only runs if cron calls schedule:run every minute. Add this single line to your crontab — you never touch cron again after this."},
+        {"type": "code", "lang": "bash", "text": "* * * * * cd /var/www/your-app && php artisan schedule:run >> /dev/null 2>&1"},
+        {"type": "h2", "text": "4. Test it without waiting"},
+        {"type": "code", "lang": "bash", "text": "php artisan schedule:list   # see everything that's scheduled\nphp artisan schedule:run    # run anything due right now"},
+        {"type": "h2", "text": "5. Avoid overlaps and set a timezone"},
+        {"type": "p", "text": "For long tasks, stop a second copy starting before the first finishes. You can also pin a timezone per task."},
+        {"type": "code", "lang": "php", "text": "Schedule::command('reports:build')\n    ->dailyAt('02:00')\n    ->timezone('Africa/Casablanca')\n    ->withoutOverlapping();"}
+      ],
+      "faq": [
+        {"q": "My scheduled tasks never run on the server", "a": "You almost certainly didn't add the cron entry that calls 'php artisan schedule:run' every minute. Without it the scheduler is never triggered. Add the single crontab line shown above."},
+        {"q": "Do I need Supervisor for the scheduler?", "a": "No — Supervisor is for queue workers (long-running). The scheduler just needs the one-minute cron entry. Managed hosts like Cloudways let you add this cron from the dashboard."}
+      ],
+      "related": ["how-to-set-up-queues-in-laravel", "deploy-laravel-app-cloudways", "deploy-laravel-app-hostinger-vps"]
+    },
+
+    {
+      "slug": "how-to-build-a-rest-api-with-sanctum-in-laravel",
+      "type": "howto",
+      "h1": "How to build a REST API with Sanctum in Laravel",
+      "title": "Build a REST API with Laravel Sanctum (Token Auth, 2026)",
+      "meta_description": "A complete, minimal Laravel REST API with Sanctum token auth: install the API, issue tokens on login, protect routes, call them with a Bearer token, and log out.",
+      "keywords": ["laravel sanctum rest api", "laravel api token authentication", "laravel install:api sanctum"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Sanctum is the simplest way to add token authentication to a Laravel API — ideal for a mobile app or SPA backend. In Laravel 11 it's one install command away. Here's a complete, minimal REST API with login, protected routes, and token issuing.",
+      "blocks": [
+        {"type": "h2", "text": "1. Install the API + Sanctum"},
+        {"type": "p", "text": "Laravel 11 ships API scaffolding behind one command. It installs Sanctum, publishes its migration, and creates routes/api.php."},
+        {"type": "code", "lang": "bash", "text": "php artisan install:api\nphp artisan migrate"},
+        {"type": "h2", "text": "2. Let the User model issue tokens"},
+        {"type": "code", "lang": "php", "text": "use Laravel\\Sanctum\\HasApiTokens;\n\nclass User extends Authenticatable\n{\n    use HasApiTokens, Notifiable;\n}"},
+        {"type": "h2", "text": "3. A login route that returns a token"},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Hash;\nuse App\\Models\\User;\n\nRoute::post('/login', function (Request $request) {\n    $user = User::where('email', $request->email)->first();\n\n    if (! $user || ! Hash::check($request->password, $user->password)) {\n        return response()->json(['message' => 'Invalid credentials'], 401);\n    }\n\n    return ['token' => $user->createToken('api')->plainTextToken];\n});"},
+        {"type": "h2", "text": "4. Protect routes with the sanctum guard"},
+        {"type": "code", "lang": "php", "text": "Route::middleware('auth:sanctum')->group(function () {\n    Route::get('/me', fn (Request $r) => $r->user());\n    Route::apiResource('posts', PostController::class);\n});"},
+        {"type": "h2", "text": "5. Call the API with the token"},
+        {"type": "p", "text": "Clients send the token as a Bearer header on every protected request."},
+        {"type": "code", "lang": "bash", "text": "curl https://yourapi.com/api/me \\\n  -H \"Authorization: Bearer YOUR_TOKEN\" \\\n  -H \"Accept: application/json\""},
+        {"type": "h2", "text": "6. Log out (revoke the token)"},
+        {"type": "code", "lang": "php", "text": "Route::middleware('auth:sanctum')->post('/logout', function (Request $r) {\n    $r->user()->currentAccessToken()->delete();\n    return ['message' => 'Logged out'];\n});"}
+      ],
+      "faq": [
+        {"q": "Sanctum tokens or Passport (OAuth)?", "a": "For first-party apps — your own mobile app or SPA — Sanctum is simpler and enough. Reach for Passport only when you need full OAuth2 (third-party clients acting on a user's behalf)."},
+        {"q": "SPA on the same domain — tokens or cookies?", "a": "For a SPA on the same top-level domain, Sanctum's cookie-based session auth is more secure than storing tokens in JavaScript. Use the Bearer-token flow for mobile apps and cross-domain clients."}
+      ],
+      "related": ["how-to-set-up-queues-in-laravel", "fix-target-class-controller-does-not-exist-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "fix-1452-foreign-key-constraint-fails-laravel",
+      "type": "fix",
+      "h1": "How to fix '1452 a foreign key constraint fails' in Laravel",
+      "title": "Fix Laravel 1452 Foreign Key Constraint Fails",
+      "meta_description": "Error 1452 means you saved a child row whose foreign key points at a parent that doesn't exist. Here are the real causes — insert order, type mismatch, bad id — and the fix.",
+      "keywords": ["laravel 1452 foreign key constraint fails", "cannot add or update a child row", "laravel foreign key error"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Error 1452 — 'Cannot add or update a child row: a foreign key constraint fails' — means you tried to save a row whose foreign key points at a parent row that doesn't exist (or is the wrong type). It's a data/order problem, not a Laravel bug. Here's how to find and fix it.",
+      "blocks": [
+        {"type": "h2", "text": "What triggers 1452"},
+        {"type": "p", "text": "MySQL refuses a child row whose foreign key value has no matching row in the parent table. Common causes: inserting the child before the parent, a null/zero foreign key, seeders running in the wrong order, or a type mismatch between the two columns."},
+        {"type": "h2", "text": "Cause 1 — Wrong insert/seed order"},
+        {"type": "p", "text": "Create parents before children. In seeders and factories, seed users before posts, categories before products, and so on."},
+        {"type": "code", "lang": "php", "text": "User::factory(10)->create();\nPost::factory(50)->create(); // each picks an existing user_id"},
+        {"type": "h2", "text": "Cause 2 — Foreign key column type mismatch"},
+        {"type": "p", "text": "The foreign key and the referenced primary key must be the same type. If id is BIGINT UNSIGNED (the Laravel default), the foreign key must be too — foreignId() handles this for you."},
+        {"type": "code", "lang": "php", "text": "$table->foreignId('user_id')->constrained()->cascadeOnDelete();"},
+        {"type": "h2", "text": "Find the orphaned rows"},
+        {"type": "code", "lang": "sql", "text": "SELECT user_id FROM posts WHERE user_id NOT IN (SELECT id FROM users);"}
+      ],
+      "faq": [
+        {"q": "It happens only during migrate:fresh --seed", "a": "Your seeders run in the wrong order. Seed parent tables first, or use factory relationships (->has() / ->for()) so the parent is created automatically."}
+      ],
+      "related": ["fix-sqlstate-1045-access-denied-laravel", "how-to-seed-the-database-in-laravel", "fix-laravel-500-error-after-deploy"]
+    },
+
+    {
+      "slug": "fix-specified-key-was-too-long-1071-laravel",
+      "type": "fix",
+      "h1": "How to fix 'Specified key was too long' (error 1071) in Laravel",
+      "title": "Fix Laravel 'Specified Key Was Too Long' (1071)",
+      "meta_description": "Error 1071 on migrate is the utf8mb4 index-length limit on older MySQL/MariaDB. The classic Laravel fix is one line: Schema::defaultStringLength(191). Here's why and how.",
+      "keywords": ["specified key was too long laravel", "laravel 1071 error", "laravel defaultStringLength 191"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-17",
+      "intro": "Error 1071 — 'Specified key was too long; max key length is 767 bytes' — appears on migrate with older MySQL/MariaDB using utf8mb4. The default string index is longer than the engine allows. The classic Laravel fix is one line in a service provider.",
+      "blocks": [
+        {"type": "h2", "text": "Why it happens"},
+        {"type": "p", "text": "utf8mb4 uses up to 4 bytes per character, so a VARCHAR(255) index needs 1020 bytes — over the 767-byte limit on MySQL < 5.7.7 and older MariaDB. Newer versions raise the limit, so upgrading the database also fixes it."},
+        {"type": "h2", "text": "The standard fix — set a default string length"},
+        {"type": "p", "text": "Set a shorter default index length in AppServiceProvider::boot(). 191 is the safe value for utf8mb4 under the old limit."},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Support\\Facades\\Schema;\n\npublic function boot(): void\n{\n    Schema::defaultStringLength(191);\n}"},
+        {"type": "h2", "text": "Then re-run migrations"},
+        {"type": "code", "lang": "bash", "text": "php artisan migrate:fresh"},
+        {"type": "h2", "text": "Better long-term — upgrade the database"},
+        {"type": "p", "text": "MySQL 5.7.7+ and MariaDB 10.2+ don't have this limit. If you control the server, upgrading is the cleaner fix; managed hosts usually run a recent version already."}
+      ],
+      "faq": [
+        {"q": "Is capping string length at 191 safe?", "a": "Yes for almost all apps — it only limits the length of indexed string columns. You rarely need an index on a string longer than 191 characters; for long text, use a TEXT column with a fulltext index instead."}
+      ],
+      "related": ["fix-sqlstate-1045-access-denied-laravel", "deploy-laravel-app-hostinger-vps", "how-to-add-full-text-search-in-laravel"]
+    },
+
+    {
+      "slug": "fix-route-not-defined-laravel",
+      "type": "fix",
+      "h1": "How to fix 'Route [name] not defined' in Laravel",
+      "title": "Fix Laravel 'Route Not Defined' — Causes and Fix",
+      "meta_description": "'Route [name] not defined' means you referenced a named route Laravel can't find. Usually a missing ->name(), a typo, or a stale route cache. Here's the fast checklist.",
+      "keywords": ["laravel route not defined", "route name not defined laravel", "laravel route:clear"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "'Route [name] not defined' means you referenced a named route (via route() or a redirect) that Laravel can't find. It's almost always a missing name, a typo, or a stale route cache. Here's the fast checklist.",
+      "blocks": [
+        {"type": "h2", "text": "Cause 1 — The route has no name"},
+        {"type": "p", "text": "route('dashboard') only works if a route is named 'dashboard'. Add ->name() to the route definition."},
+        {"type": "code", "lang": "php", "text": "Route::get('/dashboard', [DashboardController::class, 'index'])\n    ->name('dashboard');"},
+        {"type": "h2", "text": "Cause 2 — Typo or wrong name"},
+        {"type": "p", "text": "Names are exact strings: 'users.edit' and 'user.edit' are different. List the route names to see what actually exists."},
+        {"type": "code", "lang": "bash", "text": "php artisan route:list --name=dashboard"},
+        {"type": "h2", "text": "Cause 3 — Stale route cache"},
+        {"type": "p", "text": "If you cached routes and then added or renamed one, the cache doesn't know about it."},
+        {"type": "code", "lang": "bash", "text": "php artisan route:clear\n# in production, re-cache afterwards:\nphp artisan route:cache"},
+        {"type": "h2", "text": "Cause 4 — Route not actually loaded"},
+        {"type": "p", "text": "A named route in a file that isn't loaded won't resolve. Confirm it appears in 'php artisan route:list'."}
+      ],
+      "faq": [
+        {"q": "It works locally but not after deploy", "a": "You almost certainly have a cached route table from before the route existed. Run 'php artisan route:clear' then 'php artisan route:cache' as part of your deploy."}
+      ],
+      "related": ["fix-target-class-controller-does-not-exist-laravel", "fix-laravel-500-error-after-deploy", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "fix-maximum-execution-time-exceeded-laravel",
+      "type": "fix",
+      "h1": "How to fix 'Maximum execution time exceeded' in Laravel",
+      "title": "Fix Laravel 'Maximum Execution Time Exceeded'",
+      "meta_description": "The 'maximum execution time exceeded' error means a request ran too long and PHP killed it. The real fix is usually to queue the slow work, not just raise the limit. Here's both.",
+      "keywords": ["laravel maximum execution time exceeded", "php max execution time laravel", "laravel request timeout"],
+      "affiliate": "hostinger",
+      "updated": "2026-06-17",
+      "intro": "'Maximum execution time of N seconds exceeded' means a request ran longer than PHP's time limit and was killed. The right fix is usually to move the slow work off the request — not just raise the limit. Here's both.",
+      "blocks": [
+        {"type": "h2", "text": "First: should this run in a request at all?"},
+        {"type": "p", "text": "If the slow work is sending mail, processing a file, or calling an external API, push it to a queue so the request returns instantly. Raising the time limit only hides the problem."},
+        {"type": "code", "lang": "php", "text": "ProcessReport::dispatch($report); // returns immediately"},
+        {"type": "h2", "text": "If you genuinely need longer (CLI / long jobs)"},
+        {"type": "p", "text": "For legitimate long-running CLI tasks, raise PHP's max_execution_time. Keep web requests short."},
+        {"type": "code", "lang": "ini", "text": "; php.ini\nmax_execution_time = 120"},
+        {"type": "h2", "text": "On a VPS, also raise the web server timeout"},
+        {"type": "p", "text": "Nginx + PHP-FPM has its own timeout, so raising only PHP isn't enough. Increase fastcgi_read_timeout (and the FPM request_terminate_timeout) to match."},
+        {"type": "code", "lang": "nginx", "text": "location ~ \\.php$ {\n    fastcgi_read_timeout 120;\n    # ...\n}"}
+      ],
+      "faq": [
+        {"q": "Why not just set the limit very high?", "a": "A long time limit ties up a PHP worker, so a few slow requests can exhaust your workers and take the whole site down. Queue the work instead and keep request limits short."}
+      ],
+      "related": ["how-to-set-up-queues-in-laravel", "deploy-laravel-app-hostinger-vps", "fix-laravel-500-error-after-deploy"]
+    },
+
+    {
+      "slug": "how-to-send-email-with-mailable-in-laravel",
+      "type": "howto",
+      "h1": "How to send email with a Mailable in Laravel",
+      "title": "Send Email with a Mailable in Laravel (2026 Guide)",
+      "meta_description": "Send email in Laravel the clean way: configure a mailer, generate a Mailable, pass data to a Markdown view, and queue it so the request stays fast.",
+      "keywords": ["laravel send email mailable", "laravel mailable tutorial", "laravel queue email"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Laravel's Mailable classes give you a clean, testable way to build and send email. Here's the full path: configure a mailer, generate a Mailable, write the view, and send it — synchronously or, better, on a queue.",
+      "blocks": [
+        {"type": "h2", "text": "1. Configure a mailer"},
+        {"type": "p", "text": "Set your provider in .env. For real delivery use an SMTP/API service; for local testing, the 'log' mailer writes emails to storage/logs."},
+        {"type": "code", "lang": "bash", "text": "MAIL_MAILER=smtp\nMAIL_HOST=smtp.yourprovider.com\nMAIL_PORT=587\nMAIL_USERNAME=...\nMAIL_PASSWORD=...\nMAIL_FROM_ADDRESS=hello@yourapp.com"},
+        {"type": "h2", "text": "2. Generate a Mailable"},
+        {"type": "code", "lang": "bash", "text": "php artisan make:mail OrderShipped --markdown=mail.orders.shipped"},
+        {"type": "h2", "text": "3. Pass data to the view"},
+        {"type": "code", "lang": "php", "text": "class OrderShipped extends Mailable\n{\n    public function __construct(public Order $order) {}\n\n    public function envelope(): Envelope\n    {\n        return new Envelope(subject: 'Your order shipped');\n    }\n\n    public function content(): Content\n    {\n        return new Content(markdown: 'mail.orders.shipped');\n    }\n}"},
+        {"type": "h2", "text": "4. Send it — queue it for speed"},
+        {"type": "p", "text": "Sending in-request makes the user wait for the mail server. Queue it so the response is instant."},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Support\\Facades\\Mail;\n\nMail::to($order->user)->queue(new OrderShipped($order));"}
+      ],
+      "faq": [
+        {"q": "My emails are slow or time out", "a": "You're sending inside the request. Use ->queue() instead of ->send() and run a queue worker — the request returns immediately and the worker delivers the mail."},
+        {"q": "Emails work locally but not in production", "a": "Check the production MAIL_* values and that the SMTP port isn't blocked by the host's firewall. Use 'log' or a tool like Mailtrap to confirm the Mailable itself is correct."}
+      ],
+      "related": ["how-to-set-up-queues-in-laravel", "how-to-schedule-a-recurring-task-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-upload-files-to-s3-in-laravel",
+      "type": "howto",
+      "h1": "How to upload files to S3 (or DigitalOcean Spaces) in Laravel",
+      "title": "Upload Files to S3 in Laravel — Storage Guide (2026)",
+      "meta_description": "Upload and serve files on S3-compatible storage in Laravel: install the driver, configure the disk (AWS S3 or DigitalOcean Spaces), store uploads, and generate signed URLs.",
+      "keywords": ["laravel upload to s3", "laravel s3 storage", "laravel digitalocean spaces"],
+      "affiliate": "digitalocean",
+      "updated": "2026-06-17",
+      "intro": "Laravel's filesystem makes S3-compatible object storage a config change, not a rewrite — the same Storage API works for local disk, AWS S3, or DigitalOcean Spaces. Here's how to upload, store, and serve files.",
+      "blocks": [
+        {"type": "h2", "text": "1. Install the S3 driver"},
+        {"type": "code", "lang": "bash", "text": "composer require league/flysystem-aws-s3-v3"},
+        {"type": "h2", "text": "2. Configure the disk"},
+        {"type": "p", "text": "Set the credentials in .env. DigitalOcean Spaces and other S3-compatible stores use the same keys plus an endpoint."},
+        {"type": "code", "lang": "bash", "text": "AWS_ACCESS_KEY_ID=...\nAWS_SECRET_ACCESS_KEY=...\nAWS_DEFAULT_REGION=us-east-1\nAWS_BUCKET=your-bucket\n# DigitalOcean Spaces / other S3-compatible:\nAWS_ENDPOINT=https://nyc3.digitaloceanspaces.com"},
+        {"type": "h2", "text": "3. Store an uploaded file"},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Support\\Facades\\Storage;\n\npublic function store(Request $request)\n{\n    $path = $request->file('avatar')->store('avatars', 's3');\n    return Storage::disk('s3')->url($path);\n}"},
+        {"type": "h2", "text": "4. Public files or time-limited links"},
+        {"type": "code", "lang": "php", "text": "// public file\n$request->file('doc')->storePublicly('docs', 's3');\n\n// private file, signed link that expires\nStorage::disk('s3')->temporaryUrl($path, now()->addMinutes(10));"}
+      ],
+      "faq": [
+        {"q": "Can I use this with DigitalOcean Spaces instead of AWS?", "a": "Yes — Spaces is S3-compatible. Use the same s3 driver, set AWS_ENDPOINT to your Spaces region URL, and everything else stays the same."},
+        {"q": "Files upload but the URL 404s", "a": "The object isn't public, or the URL config is off. Use storePublicly() for public files, or temporaryUrl() to generate signed links for private ones."}
+      ],
+      "related": ["deploy-laravel-app-digitalocean", "how-to-validate-a-request-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-add-full-text-search-in-laravel",
+      "type": "howto",
+      "h1": "How to add full-text search in Laravel with Scout",
+      "title": "Add Full-Text Search in Laravel (Scout) — 2026 Guide",
+      "meta_description": "Add real search to Laravel with Scout: install it, make a model searchable, pick a driver (database, Meilisearch, or Algolia), index, and run typo-tolerant searches.",
+      "keywords": ["laravel full text search", "laravel scout tutorial", "laravel search meilisearch"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "For real search — relevance ranking and typo tolerance — Laravel Scout is the clean answer. Here's how to add it, index a model, and search, plus when a simple database LIKE is enough.",
+      "blocks": [
+        {"type": "h2", "text": "Scout vs a plain LIKE query"},
+        {"type": "p", "text": "For a small table and exact substrings, where('title', 'like', \"%$q%\") is fine. For ranked, fast, typo-tolerant search across many rows, use Scout with a search engine driver."},
+        {"type": "h2", "text": "1. Install Scout"},
+        {"type": "code", "lang": "bash", "text": "composer require laravel/scout\nphp artisan vendor:publish --provider=\"Laravel\\Scout\\ScoutServiceProvider\""},
+        {"type": "h2", "text": "2. Make a model searchable"},
+        {"type": "code", "lang": "php", "text": "use Laravel\\Scout\\Searchable;\n\nclass Post extends Model\n{\n    use Searchable;\n\n    public function toSearchableArray(): array\n    {\n        return ['title' => $this->title, 'body' => $this->body];\n    }\n}"},
+        {"type": "h2", "text": "3. Pick a driver and index"},
+        {"type": "p", "text": "Scout supports a lightweight 'database' driver (no extra service) or engines like Meilisearch/Algolia for serious search. Set SCOUT_DRIVER in .env, then import existing rows."},
+        {"type": "code", "lang": "bash", "text": "php artisan scout:import \"App\\Models\\Post\""},
+        {"type": "h2", "text": "4. Search"},
+        {"type": "code", "lang": "php", "text": "$results = Post::search('lravel deploy')->get(); // typo-tolerant with a real engine"}
+      ],
+      "faq": [
+        {"q": "Do I need Algolia or Meilisearch to start?", "a": "No. The 'database' driver needs no extra infrastructure and is great for small/medium tables. Move to Meilisearch (self-hosted, free) or Algolia when you need speed and typo tolerance at scale."}
+      ],
+      "related": ["how-to-cache-database-queries-in-laravel", "fix-specified-key-was-too-long-1071-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-cache-database-queries-in-laravel",
+      "type": "howto",
+      "h1": "How to cache database queries in Laravel",
+      "title": "Cache Database Queries in Laravel (the Right Way)",
+      "meta_description": "Speed up Laravel by caching expensive queries with Cache::remember, choosing Redis in production, and — the part people forget — invalidating the cache when data changes.",
+      "keywords": ["laravel cache query", "laravel cache remember", "laravel redis cache"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Caching turns repeated, expensive queries into instant reads. Laravel's Cache facade makes it a one-liner. Here's how to cache results, pick a driver, and — the part people forget — invalidate the cache when data changes.",
+      "blocks": [
+        {"type": "h2", "text": "1. Cache a query result"},
+        {"type": "p", "text": "Cache::remember runs the query only if the key isn't cached, then stores the result for the given number of seconds."},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Support\\Facades\\Cache;\n\n$posts = Cache::remember('posts.popular', 600, function () {\n    return Post::popular()->take(10)->get();\n});"},
+        {"type": "h2", "text": "2. Use a real cache driver in production"},
+        {"type": "p", "text": "The default file/database drivers work but are slow. Redis is the standard for production caching."},
+        {"type": "code", "lang": "bash", "text": "CACHE_STORE=redis"},
+        {"type": "h2", "text": "3. Invalidate when data changes"},
+        {"type": "p", "text": "Stale cache is the classic bug. Forget the key whenever the underlying data is updated — a model observer is a clean place to do it."},
+        {"type": "code", "lang": "php", "text": "Cache::forget('posts.popular');"},
+        {"type": "h2", "text": "4. Group keys with tags (Redis)"},
+        {"type": "code", "lang": "php", "text": "Cache::tags('posts')->put('popular', $posts, 600);\nCache::tags('posts')->flush(); // clear the whole group"}
+      ],
+      "faq": [
+        {"q": "My users see old data after an update", "a": "You're not invalidating the cache. Call Cache::forget() (or flush a tag) whenever the cached data changes — a model observer is the cleanest place."},
+        {"q": "Which cache driver should I use?", "a": "Redis in production for speed and tag support. The database/file drivers are fine for local development or very low traffic."}
+      ],
+      "related": ["how-to-set-up-queues-in-laravel", "how-to-add-full-text-search-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-validate-a-request-in-laravel",
+      "type": "howto",
+      "h1": "How to validate a request in Laravel",
+      "title": "Validate a Request in Laravel — Rules & Form Requests",
+      "meta_description": "Validate input in Laravel two ways: a one-line $request->validate() or a reusable Form Request class. Plus how errors come back and how to customize messages.",
+      "keywords": ["laravel validate request", "laravel form request", "laravel validation rules"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Validation in Laravel can be a one-liner in the controller or a dedicated Form Request class for anything non-trivial. Here's both, plus how errors come back and how to customize messages.",
+      "blocks": [
+        {"type": "h2", "text": "1. Quick inline validation"},
+        {"type": "code", "lang": "php", "text": "$validated = $request->validate([\n    'title' => 'required|string|max:255',\n    'email' => 'required|email|unique:users',\n    'age'   => 'nullable|integer|min:18',\n]);"},
+        {"type": "h2", "text": "2. Form Request for reusable rules"},
+        {"type": "p", "text": "Move complex rules into their own class for cleaner controllers and built-in authorization."},
+        {"type": "code", "lang": "bash", "text": "php artisan make:request StorePostRequest"},
+        {"type": "h2", "text": "3. Define rules and messages"},
+        {"type": "code", "lang": "php", "text": "public function rules(): array\n{\n    return [\n        'title' => ['required', 'max:255'],\n        'body'  => ['required'],\n    ];\n}\n\npublic function messages(): array\n{\n    return ['title.required' => 'A title is required.'];\n}"},
+        {"type": "h2", "text": "4. Use it — validation runs automatically"},
+        {"type": "code", "lang": "php", "text": "public function store(StorePostRequest $request)\n{\n    Post::create($request->validated());\n}"}
+      ],
+      "faq": [
+        {"q": "Where do validation errors go?", "a": "On a normal form submit, Laravel redirects back with errors in the session — show them with @error in Blade. For JSON/API requests it returns a 422 response with an 'errors' object automatically."},
+        {"q": "How do I authorize as well as validate?", "a": "In a Form Request, return true/false from authorize(). Returning false yields a 403 before the rules run — handy for owner-only updates."}
+      ],
+      "related": ["how-to-build-a-rest-api-with-sanctum-in-laravel", "how-to-upload-files-to-s3-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-seed-the-database-in-laravel",
+      "type": "howto",
+      "h1": "How to seed the database in Laravel",
+      "title": "Seed the Database in Laravel — Factories & Seeders",
+      "meta_description": "Fill your Laravel database with factories and seeders: generate realistic fake rows, call them from a seeder in the right order, and rebuild with migrate:fresh --seed.",
+      "keywords": ["laravel seed database", "laravel factory seeder", "laravel db:seed"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Seeders fill your database with starter or test data; factories generate realistic fake rows. Together they make 'fresh database in one command' possible. Here's the full setup and the common ordering gotcha.",
+      "blocks": [
+        {"type": "h2", "text": "1. Create a factory"},
+        {"type": "code", "lang": "bash", "text": "php artisan make:factory PostFactory"},
+        {"type": "h2", "text": "2. Define realistic fake data"},
+        {"type": "code", "lang": "php", "text": "public function definition(): array\n{\n    return [\n        'title'   => fake()->sentence(),\n        'body'    => fake()->paragraphs(3, true),\n        'user_id' => User::factory(),\n    ];\n}"},
+        {"type": "h2", "text": "3. Call factories from a seeder"},
+        {"type": "p", "text": "Seed parents before children to avoid foreign key errors — or let relationships do it for you."},
+        {"type": "code", "lang": "php", "text": "public function run(): void\n{\n    User::factory(10)\n        ->has(Post::factory()->count(5))\n        ->create();\n}"},
+        {"type": "h2", "text": "4. Run it"},
+        {"type": "code", "lang": "bash", "text": "php artisan db:seed\n# or rebuild the whole schema and seed:\nphp artisan migrate:fresh --seed"}
+      ],
+      "faq": [
+        {"q": "I get a foreign key constraint error while seeding", "a": "You're seeding children before parents. Create the parent rows first, or use factory relationships (->has() / ->for()) so the parent is created automatically."},
+        {"q": "Should I run seeders in production?", "a": "Only idempotent reference data (countries, roles, plans). Never seed fake/test data into production — guard those seeders or keep them out of the production seed path."}
+      ],
+      "related": ["how-to-write-a-feature-test-in-laravel", "fix-1452-foreign-key-constraint-fails-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "how-to-write-a-feature-test-in-laravel",
+      "type": "howto",
+      "h1": "How to write a feature test in Laravel",
+      "title": "Write a Feature Test in Laravel (2026 Guide)",
+      "meta_description": "Write feature tests in Laravel that hit real routes and assert on the response and database: generate a test, use RefreshDatabase, act as a logged-in user, and run the suite.",
+      "keywords": ["laravel feature test", "laravel testing tutorial", "laravel refreshdatabase"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Feature tests hit real routes and assert on the response and the database — the highest-value tests for a web app. Here's how to write one, use a fresh database per test, and act as a logged-in user.",
+      "blocks": [
+        {"type": "h2", "text": "1. Generate a test"},
+        {"type": "code", "lang": "bash", "text": "php artisan make:test PostTest"},
+        {"type": "h2", "text": "2. Use a fresh database"},
+        {"type": "p", "text": "The RefreshDatabase trait migrates a clean database for each test so they don't interfere with each other."},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Foundation\\Testing\\RefreshDatabase;\n\nclass PostTest extends TestCase\n{\n    use RefreshDatabase;\n}"},
+        {"type": "h2", "text": "3. Test a route and the database"},
+        {"type": "code", "lang": "php", "text": "public function test_a_user_can_create_a_post(): void\n{\n    $user = User::factory()->create();\n\n    $response = $this->actingAs($user)->post('/posts', [\n        'title' => 'Hello',\n        'body'  => 'World',\n    ]);\n\n    $response->assertRedirect();\n    $this->assertDatabaseHas('posts', ['title' => 'Hello']);\n}"},
+        {"type": "h2", "text": "4. Run the suite"},
+        {"type": "code", "lang": "bash", "text": "php artisan test\n# one file:\nphp artisan test --filter=PostTest"}
+      ],
+      "faq": [
+        {"q": "Tests are slow — how do I speed them up?", "a": "Use an in-memory SQLite database for tests (DB_CONNECTION=sqlite, DB_DATABASE=:memory: in phpunit.xml) with RefreshDatabase, and run with --parallel to use multiple cores."},
+        {"q": "Feature test or unit test?", "a": "Feature tests exercise routes/HTTP and the database and catch the most real bugs — start there. Use unit tests for isolated, logic-heavy classes."}
+      ],
+      "related": ["how-to-seed-the-database-in-laravel", "deploy-laravel-with-github-actions", "how-to-rate-limit-an-endpoint-in-laravel"]
+    },
+
+    {
+      "slug": "how-to-rate-limit-an-endpoint-in-laravel",
+      "type": "howto",
+      "h1": "How to rate limit an endpoint in Laravel",
+      "title": "Rate Limit an Endpoint in Laravel — Throttle Guide",
+      "meta_description": "Protect Laravel APIs and login routes from abuse with the throttle middleware and named rate limiters: per-IP and per-user limits, plus the 429 response clients get.",
+      "keywords": ["laravel rate limit", "laravel throttle middleware", "laravel api rate limiting"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Rate limiting protects your API and login routes from abuse. Laravel has a built-in throttle middleware plus named limiters for fine control. Here's how to apply both.",
+      "blocks": [
+        {"type": "h2", "text": "1. The quick way — throttle middleware"},
+        {"type": "p", "text": "Apply the throttle middleware with a requests-per-minute limit right on the route."},
+        {"type": "code", "lang": "php", "text": "Route::middleware('throttle:60,1')->group(function () {\n    Route::get('/api/posts', [PostController::class, 'index']);\n});"},
+        {"type": "h2", "text": "2. Named limiters for real control"},
+        {"type": "p", "text": "Define limiters in a service provider so you can vary the limit by user, IP, or plan."},
+        {"type": "code", "lang": "php", "text": "use Illuminate\\Cache\\RateLimiting\\Limit;\nuse Illuminate\\Support\\Facades\\RateLimiter;\n\nRateLimiter::for('api', function ($request) {\n    return $request->user()\n        ? Limit::perMinute(100)->by($request->user()->id)\n        : Limit::perMinute(20)->by($request->ip());\n});"},
+        {"type": "h2", "text": "3. Apply the named limiter"},
+        {"type": "code", "lang": "php", "text": "Route::middleware('throttle:api')->group(function () {\n    // ...\n});"},
+        {"type": "h2", "text": "4. What the client sees"},
+        {"type": "p", "text": "When the limit is hit, Laravel returns HTTP 429 Too Many Requests with X-RateLimit-* and Retry-After headers, so clients know when to retry."}
+      ],
+      "faq": [
+        {"q": "How do I rate limit login attempts specifically?", "a": "Use a named limiter keyed by email + IP, or Laravel's built-in login throttling (the auth scaffolding already throttles failed logins). This blunts brute-force attacks."}
+      ],
+      "related": ["how-to-build-a-rest-api-with-sanctum-in-laravel", "how-to-write-a-feature-test-in-laravel", "deploy-laravel-app-cloudways"]
+    }
+  ],
+
+  "matrix": {
+    "note": "These programmatically expand into skeleton pages with correct SEO structure and internal links. You fill the body later (by hand or via the Claude API step in generate_content.py).",
+    "templates": [
+      {
+        "type": "howto",
+        "pattern": "how-to-{task_slug}-in-laravel",
+        "h1": "How to {task} in Laravel",
+        "title": "How to {task} in Laravel (2026 Guide)",
+        "meta_description": "A step-by-step guide to {task} in Laravel 11, with copy-paste code and the common mistakes to avoid.",
+        "affiliate": "cloudways"
+      },
+      {
+        "type": "fix",
+        "pattern": "fix-{error_slug}-laravel",
+        "h1": "How to fix '{error}' in Laravel",
+        "title": "Fix '{error}' in Laravel — Causes and Solutions",
+        "meta_description": "What causes '{error}' in Laravel and how to fix it, with a short checklist that finds the cause fast.",
+        "affiliate": "cloudways"
+      }
+    ],
+    "tasks": [],
+    "errors": []
+  }
+}
