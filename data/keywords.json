@@ -4,7 +4,45 @@
     "tagline": "Deploy, fix, and ship Laravel — fast.",
     "base_url": "https://nassimcodedev.github.io/laravel-deploy",
     "author": "CODNET",
-    "lang": "en"
+    "lang": "en",
+    "gsc_verification": "",
+    "ga_id": ""
+  },
+
+  "i18n": {
+    "en": {
+      "tagline": "Deploy, fix, and ship Laravel — fast.",
+      "related": "Related",
+      "faq": "Frequently asked questions",
+      "updated": "updated",
+      "by": "by",
+      "ad_tag": "Recommended hosting",
+      "disclosure": "Affiliate link — we may earn a commission at no extra cost to you.",
+      "index_label": "Index",
+      "type_labels": {"deploy": "Deployment guide", "fix": "Fix / troubleshooting", "compare": "Comparison", "howto": "How-to guide"}
+    },
+    "ar": {
+      "tagline": "دبلوي، صلّح، وأطلق Laravel — بسرعة.",
+      "related": "مواضيع مرتبطة",
+      "faq": "أسئلة شائعة",
+      "updated": "آخر تحديث",
+      "by": "بقلم",
+      "ad_tag": "استضافة موصى بها",
+      "disclosure": "رابط تابع (affiliate) — قد نربح عمولة بدون أي تكلفة إضافية عليك.",
+      "index_label": "الفهرس",
+      "type_labels": {"deploy": "دليل النشر", "fix": "حل مشكل", "compare": "مقارنة", "howto": "شرح خطوة بخطوة"}
+    },
+    "fr": {
+      "tagline": "Déployer, corriger et livrer Laravel — vite.",
+      "related": "Articles liés",
+      "faq": "Questions fréquentes",
+      "updated": "mis à jour le",
+      "by": "par",
+      "ad_tag": "Hébergement recommandé",
+      "disclosure": "Lien affilié — nous pouvons toucher une commission sans coût supplémentaire pour vous.",
+      "index_label": "Index",
+      "type_labels": {"deploy": "Guide de déploiement", "fix": "Correction / dépannage", "compare": "Comparatif", "howto": "Guide pratique"}
+    }
   },
 
   "affiliates": {
@@ -13,6 +51,10 @@
       "url": "https://cloudways.com/?aff=YOUR_ID",
       "blurb": "Managed cloud hosting that runs Laravel without server headaches — pre-tuned PHP, free SSL, one-click staging.",
       "cta": "Try Cloudways free for 3 days",
+      "blurb_ar": "استضافة سحابية مُدارة كتشغّل Laravel بلا صداع السيرفر — PHP مضبوط، SSL مجاني، وstaging بضغطة.",
+      "cta_ar": "جرّب Cloudways مجاناً 3 أيام",
+      "blurb_fr": "Hébergement cloud infogéré qui fait tourner Laravel sans prise de tête serveur — PHP préréglé, SSL gratuit, staging en un clic.",
+      "cta_fr": "Essayer Cloudways gratuitement 3 jours",
       "payout": "Up to $125 per signup (or 30% recurring)"
     },
     "hostinger": {
@@ -20,6 +62,10 @@
       "url": "https://hostinger.com/vps?REFERRALCODE=YOUR_ID",
       "blurb": "Cheap, fast VPS with a Laravel-ready template — good when you want full control on a student budget.",
       "cta": "Get a Laravel VPS",
+      "blurb_ar": "VPS رخيص وسريع مع قالب جاهز لـ Laravel — مناسب منين بغيتي تحكم كامل بميزانية طالب.",
+      "cta_ar": "احصل على VPS لـ Laravel",
+      "blurb_fr": "VPS rapide et pas cher avec un modèle prêt pour Laravel — idéal quand on veut le contrôle total avec un budget étudiant.",
+      "cta_fr": "Obtenir un VPS Laravel",
       "payout": "Up to $100 per sale"
     },
     "digitalocean": {
@@ -27,6 +73,10 @@
       "url": "https://digitalocean.com/?refcode=YOUR_ID",
       "blurb": "Raw droplets with $200 in starting credit — the classic VPS choice when you want to learn the server side.",
       "cta": "Claim $200 in credit",
+      "blurb_ar": "Droplets خام مع 200 دولار رصيد بداية — الخيار الكلاسيكي ملي بغيتي تتعلم الجانب ديال السيرفر.",
+      "cta_ar": "احصل على 200 دولار رصيد",
+      "blurb_fr": "Droplets bruts avec 200 $ de crédit de départ — le choix classique pour apprendre le côté serveur.",
+      "cta_fr": "Obtenir 200 $ de crédit",
       "payout": "$25 per qualified signup"
     }
   },
@@ -34,6 +84,7 @@
   "pages": [
     {
       "slug": "deploy-laravel-app-cloudways",
+      "group": "deploy-cloudways",
       "type": "deploy",
       "h1": "How to deploy a Laravel app on Cloudways (2026)",
       "title": "Deploy a Laravel App on Cloudways — Step by Step (2026)",
@@ -253,6 +304,7 @@
 
     {
       "slug": "best-laravel-hosting-2026",
+      "group": "best-hosting",
       "type": "compare",
       "h1": "The best Laravel hosting in 2026 (honest comparison)",
       "title": "Best Laravel Hosting in 2026 — Managed vs VPS Compared",
@@ -878,6 +930,158 @@
         {"q": "How do I rate limit login attempts specifically?", "a": "Use a named limiter keyed by email + IP, or Laravel's built-in login throttling (the auth scaffolding already throttles failed logins). This blunts brute-force attacks."}
       ],
       "related": ["how-to-build-a-rest-api-with-sanctum-in-laravel", "how-to-write-a-feature-test-in-laravel", "deploy-laravel-app-cloudways"]
+    },
+
+    {
+      "slug": "best-laravel-hosting-2026-ar",
+      "group": "best-hosting",
+      "lang": "ar",
+      "type": "compare",
+      "h1": "أفضل استضافة لـ Laravel في 2026 (مقارنة صادقة)",
+      "title": "أفضل استضافة Laravel في 2026 — مُدار مقابل VPS",
+      "meta_description": "مقارنة عملية بدون مبالغة لأفضل طرق استضافة تطبيق Laravel في 2026 — مُدار (Cloudways)، VPS رخيص (Hostinger)، وdroplets خام (DigitalOcean) — مع اختيار واضح لكل حالة.",
+      "keywords": ["أفضل استضافة laravel", "استضافة laravel 2026", "وين نستضيف تطبيق laravel"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "ما كاينش استضافة 'أفضل' وحدة لـ Laravel — كاين الأفضل حسب قد أش بغيتي تخدم على السيرفر بيديك. الاختيار الحقيقي بين استضافة مُدارة (ما كتمسش السيرفر)، VPS رخيص (كتسطيه مرة وحدة)، وdroplets خام (كتحكم فكلشي). هاد المقال كيوريك كيفاش كيتقارنو الثلاثة وأشمن وحدة تختار.",
+      "blocks": [
+        {"type": "h2", "text": "أش كيحتاج Laravel من الاستضافة"},
+        {"type": "ul", "items": ["PHP 8.2+ مع الإضافات المعتادة (mbstring, xml, curl, pdo)", "دخول SSH باش تشغّل Composer وأوامر 'php artisan' — ماشي استضافة مشتركة عادية", "قاعدة بيانات (MySQL/MariaDB أو PostgreSQL)", "إمكانية تشغيل queue worker والـ scheduler (cron)", "جذر الويب مُوجّه لـ public/، مع SSL مجاني"]},
+        {"type": "p", "text": "هاد اللائحة هي علاش الاستضافة المشتركة الرخيصة بلا SSH ما كتنفعش: ما تقدرش تشغّل artisan ولا الـ workers ولا الـ scheduler مزيان. كل الخيارات اللي تحت كتوفر هاد الشروط."},
+        {"type": "h2", "text": "الخيار 1 — سحابة مُدارة (Cloudways): أقل خدمة على السيرفر"},
+        {"type": "p", "text": "Cloudways كتخدم فوق مزودين بحال DigitalOcean وAWS ولكن كتدبّر السيرفر عليك: PHP مضبوط، SSL بضغطة، وstaging وGit deploy جاهزين — بلا ما تكتب أي إعداد Nginx. كتخلّص أكثر من VPS خام ولكن ما كتضيّعش وقت فإدارة السيرفر، وهادي الصفقة الصحيحة ملي وقتك أغلى من شي دولارات فالشهر."},
+        {"type": "p", "text": "اختارها إيلا: بغيتي التطبيق لايف اليوم، ما بغيتيش تتعلم إدارة السيرفر دابا، ولا كتخدم لكليان وكتحتاج staging ونسخ احتياطي ساهلين."},
+        {"type": "h2", "text": "الخيار 2 — VPS رخيص (Hostinger): أقل فاتورة، كتسطيه مرة"},
+        {"type": "p", "text": "VPS ديال Hostinger هو خيار التحكم بميزانية: كتثبّت الـ LEMP بيديك مرة، ومن بعد يولّي ديالك بثمن شهري رخيص. بعض الخطط كتجي بقالب Laravel/LEMP كيقفز ليك أغلب الإعداد. خدمة أكثر من المُدار، ولكن أرخص بكثير على المدى الطويل."},
+        {"type": "p", "text": "اختارها إيلا: الميزانية ضيقة، بغيتي تتعلم الجانب ديال السيرفر، وما عندكش مشكل تشغّل شوية ديال الأوامر."},
+        {"type": "h2", "text": "الخيار 3 — Droplet خام (DigitalOcean): أكبر تحكم، رصيد للبداية"},
+        {"type": "p", "text": "Droplet ديال DigitalOcean هو علبة Ubuntu نقية بلا ما يتفترض شي حاجة. كتاخد تحكم كامل، ورصيد الحساب الجديد (حوالي 200 دولار) كيغطّي شهور ديال droplet صغير مجاناً — مثالي للتعلم. ربطو بـ Laravel Forge من بعد إيلا بغيتي راحة المُدار بلا ما تخرج من المزود."},
+        {"type": "p", "text": "اختارها إيلا: بغيتي تفهم كل طبقة، كتجرّب على الرصيد المجاني، ولا ناوي تدبّر السيرفر بـ Forge."},
+        {"type": "h2", "text": "التوصية الصادقة"},
+        {"type": "ul", "items": ["بغيتيه لايف بلا خدمة على السيرفر ← Cloudways (مُدار).", "ميزانية ضيقة وموافق تسطيه مرة ← Hostinger VPS.", "كتتعلم الستاك ولا كتستعمل الرصيد المجاني ← DigitalOcean droplet."]},
+        {"type": "p", "text": "إيلا ما متأكدش، بدا بالمُدار: الوقت اللي كتربح فإدارة السيرفر فالشهر الأول أغلى من فرق الثمن، وديما تقدر تنتقل لـ VPS خام ملي تعرف بالضبط أش محتاج."}
+      ],
+      "faq": [
+        {"q": "واش نقدر نستضيف Laravel على استضافة مشتركة رخيصة؟", "a": "أحياناً، ولكن صعيب: أغلب الخطط المشتركة ما فيهاش SSH ولا Composer ولا طريقة تشغّل الـ workers والـ scheduler. استعمل سحابة مُدارة ولا VPS — بجوج رخاص ومصنوعين لتطبيقات بحال Laravel."},
+        {"q": "واش الاستضافة المُدارة تستاهل الثمن الزائد؟", "a": "إيلا وقتك عندو قيمة، غالباً إيه فالبداية. كتقفز إعداد السيرفر، الترقيع الأمني، وإعداد SSL. انتقل لـ VPS خام من بعد ملي تبغي فاتورة أرخص وتعرف الستاك."},
+        {"q": "أشمن وحدة أسرع؟", "a": "الأداء الخام متقارب فالثلاثة على عتاد متشابه — كلهم كيشغّلو نفس PHP. استعلامات قاعدة البيانات، الـ caching، وواش درتي 'config:cache' و'route:cache' كيأثرو أكثر بكثير من ماركة الاستضافة."}
+      ],
+      "related": ["deploy-laravel-app-cloudways-ar"]
+    },
+
+    {
+      "slug": "best-laravel-hosting-2026-fr",
+      "group": "best-hosting",
+      "lang": "fr",
+      "type": "compare",
+      "h1": "Le meilleur hébergement Laravel en 2026 (comparatif honnête)",
+      "title": "Meilleur hébergement Laravel 2026 — Infogéré vs VPS",
+      "meta_description": "Comparatif pratique et sans hype des meilleures façons d'héberger une app Laravel en 2026 — infogéré (Cloudways), VPS pas cher (Hostinger) et droplets bruts (DigitalOcean) — avec un choix clair pour chaque cas.",
+      "keywords": ["meilleur hébergement laravel", "hébergement laravel 2026", "où héberger une app laravel"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Il n'existe pas un seul « meilleur » hébergeur Laravel — il y a le meilleur selon la quantité de travail serveur que vous voulez faire. Le vrai choix se situe entre l'infogéré (vous ne touchez jamais le serveur), un VPS pas cher (configuré une fois) et les droplets bruts (vous contrôlez tout). Voici comment les trois options se comparent vraiment, et laquelle choisir.",
+      "blocks": [
+        {"type": "h2", "text": "Ce dont Laravel a besoin d'un hébergeur"},
+        {"type": "ul", "items": ["PHP 8.2+ avec les extensions courantes (mbstring, xml, curl, pdo)", "Un accès SSH pour lancer Composer et les commandes « php artisan » — pas du mutualisé simple", "Une base de données (MySQL/MariaDB ou PostgreSQL)", "La possibilité de faire tourner un worker de file et le planificateur (cron)", "La racine web pointée sur public/, plus un SSL gratuit"]},
+        {"type": "p", "text": "Cette liste explique pourquoi le mutualisé pas cher sans SSH convient mal : vous ne pouvez pas lancer artisan, les workers ni le planificateur correctement. Toutes les options ci-dessous remplissent ces conditions."},
+        {"type": "h2", "text": "Option 1 — Cloud infogéré (Cloudways) : le moins de travail serveur"},
+        {"type": "p", "text": "Cloudways s'appuie sur des fournisseurs comme DigitalOcean et AWS mais gère le serveur pour vous : PHP préréglé, SSL en un clic, staging et déploiement Git intégrés — aucune config Nginx à écrire. Vous payez plus qu'un VPS brut mais ne perdez aucun temps en administration serveur, le bon compromis quand votre temps vaut plus que quelques dollars par mois."},
+        {"type": "p", "text": "Choisissez-le si : vous voulez l'app en ligne aujourd'hui, vous ne voulez pas encore apprendre l'administration serveur, ou vous faites du travail client et avez besoin de staging et de sauvegardes faciles."},
+        {"type": "h2", "text": "Option 2 — VPS pas cher (Hostinger) : facture la plus basse, configuré une fois"},
+        {"type": "p", "text": "Le VPS Hostinger est l'option contrôle-budget : vous installez la pile LEMP vous-même une fois, puis il est à vous pour un prix mensuel bas. Certaines offres incluent un modèle Laravel/LEMP qui saute l'essentiel de la configuration. Plus de travail que l'infogéré, bien moins cher sur la durée."},
+        {"type": "p", "text": "Choisissez-le si : votre budget est serré, vous voulez apprendre le côté serveur, et lancer quelques commandes ne vous dérange pas."},
+        {"type": "h2", "text": "Option 3 — Droplet brut (DigitalOcean) : contrôle maximal, crédit pour démarrer"},
+        {"type": "p", "text": "Un droplet DigitalOcean est une machine Ubuntu propre sans rien de présupposé. Vous avez le contrôle total, et le crédit de nouveau compte (environ 200 $) couvre des mois d'un petit droplet gratuitement — idéal pour apprendre. Associez-le à Laravel Forge plus tard si vous voulez le confort de l'infogéré sans quitter le fournisseur."},
+        {"type": "p", "text": "Choisissez-le si : vous voulez comprendre chaque couche, vous expérimentez sur le crédit gratuit, ou vous comptez gérer le serveur avec Forge."},
+        {"type": "h2", "text": "La recommandation honnête"},
+        {"type": "ul", "items": ["En ligne sans travail serveur → Cloudways (infogéré).", "Budget serré, prêt à configurer une fois → Hostinger VPS.", "Apprendre la pile ou utiliser le crédit gratuit → droplet DigitalOcean."]},
+        {"type": "p", "text": "Si vous hésitez, commencez en infogéré : le temps gagné en administration serveur le premier mois vaut plus que la différence de prix, et vous pourrez toujours passer à un VPS brut une fois que vous saurez exactement ce qu'il vous faut."}
+      ],
+      "faq": [
+        {"q": "Puis-je héberger Laravel sur du mutualisé pas cher ?", "a": "Parfois, mais c'est pénible : la plupart des offres mutualisées n'ont ni SSH, ni Composer, ni de quoi faire tourner les workers et le planificateur. Utilisez plutôt un cloud infogéré ou un VPS — les deux sont abordables et faits pour des apps comme Laravel."},
+        {"q": "L'infogéré vaut-il le surcoût ?", "a": "Si votre temps a de la valeur, généralement oui au début. Vous évitez la configuration serveur, les correctifs de sécurité et la config SSL. Passez à un VPS brut plus tard quand vous voulez une facture plus basse et que vous connaissez la pile."},
+        {"q": "Lequel est le plus rapide ?", "a": "Les performances brutes sont similaires sur du matériel comparable — tous font tourner le même PHP. Vos requêtes de base de données, le cache, et le fait d'avoir lancé « config:cache » et « route:cache » comptent bien plus que la marque de l'hébergeur."}
+      ],
+      "related": ["deploy-laravel-app-cloudways-fr"]
+    },
+
+    {
+      "slug": "deploy-laravel-app-cloudways-ar",
+      "group": "deploy-cloudways",
+      "lang": "ar",
+      "type": "deploy",
+      "h1": "كيفاش تدبلوي تطبيق Laravel على Cloudways (2026)",
+      "title": "نشر تطبيق Laravel على Cloudways — خطوة بخطوة (2026)",
+      "meta_description": "دليل واضح بالنسخ واللصق لنشر تطبيق Laravel 11 على Cloudways: إعداد السيرفر، النشر بـ Git، الـ .env، الـ migrations، الـ queue workers، وSSL.",
+      "keywords": ["نشر laravel cloudways", "laravel cloudways شرح", "استضافة laravel cloudways"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Cloudways هو الطريق الأسهل لتطبيق Laravel: نسخة PHP وComposer وسيرفر الويب مضبوطين من قبل، إذن كتقفز الجزء اللي كتحارب فيه Nginx فالـ 2 ديال الليل. هاد الدليل كياخدك من سيرفر جديد لتطبيق لايف مع migrations وqueues وHTTPS — بلا ما يتفترض أي خبرة سابقة بالسيرفر.",
+      "blocks": [
+        {"type": "h2", "text": "1. أطلق سيرفر وتطبيق"},
+        {"type": "p", "text": "من بعد التسجيل، صاوب سيرفر واختار ستاك PHP. اختار منطقة قريبة من المستخدمين والخطة الأصغر فالبداية — تقدر تكبّر من بعد بلا إعادة بناء. Cloudways كيوفّر ليك خانة 'application' فين غادي يسكن كود Laravel."},
+        {"type": "p", "text": "ملي يطلع السيرفر، سجّل الـ IP العمومي، بيانات SSH/SFTP، والمسار العمومي ديال التطبيق (كيسالي بـ /public_html — مجلد public/ ديال Laravel كيتربط هنا)."},
+        {"type": "h2", "text": "2. صيفط الكود بـ Git"},
+        {"type": "p", "text": "من لوحة التطبيق، حل خانة Deployment via Git، زيد مفتاح SSH ديال الريبو، واجبد الفرع main. هادي أنظف من SFTP حيت كل نشر مقبل بضغطة وحدة."},
+        {"type": "code", "lang": "bash", "text": "# locally, make sure your repo is clean\ngit add .\ngit commit -m \"production build\"\ngit push origin main\n\n# then in Cloudways: Deployment via Git > Pull"},
+        {"type": "h2", "text": "3. اضبط البيئة"},
+        {"type": "p", "text": "ادخل بـ SSH للسيرفر وسطّي الـ .env ديالك. عمرك ما تكوميتي الأسرار — ولّد مفتاح التطبيق على السيرفر."},
+        {"type": "code", "lang": "bash", "text": "cp .env.example .env\nnano .env   # set APP_ENV=production, APP_DEBUG=false, DB_*, etc.\nphp artisan key:generate\ncomposer install --optimize-autoloader --no-dev"},
+        {"type": "h2", "text": "4. Migrate وcache"},
+        {"type": "code", "lang": "bash", "text": "php artisan migrate --force\nphp artisan config:cache\nphp artisan route:cache\nphp artisan view:cache"},
+        {"type": "p", "text": "علم --force ضروري فالبرودكشن حيت Laravel كيطلب تأكيد بلاه. تخزين config وroutes فالـ cache كيعطي سرعة حقيقية فكل طلب."},
+        {"type": "h2", "text": "5. الـ Queues والمهام المجدولة"},
+        {"type": "p", "text": "إيلا التطبيق كيصيفط إيميلات ولا كيعالج jobs، زيد queue worker كـ Supervisor process من اللوحة، ووجّه الـ cron للـ scheduler باش أي حاجة فالـ Kernel تخدم فوقتها."},
+        {"type": "code", "lang": "bash", "text": "* * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1"},
+        {"type": "h2", "text": "6. زيد دومين وSSL"},
+        {"type": "p", "text": "وجّه سجل A ديال الدومين للـ IP ديال السيرفر، زيد الدومين فاللوحة، ومن بعد فعّل شهادة Let's Encrypt المجانية. حط APP_URL فالـ .env للدومين https وعاود config:cache."}
+      ],
+      "faq": [
+        {"q": "أشمن نسخة PHP نختار لـ Laravel 11؟", "a": "Laravel 11 كيحتاج PHP 8.2 ولا أعلى. اختار 8.3 على Cloudways لأحسن توازن بين السرعة ودعم المكتبات فـ 2026."},
+        {"q": "واش محتاج سيرفر قاعدة بيانات منفصل؟", "a": "لا. نسخة MySQL (ولا MariaDB) كتجي فنفس السيرفر. صاوب قاعدة البيانات من اللوحة وانسخ البيانات للـ .env ديالك."},
+        {"q": "الـ CSS/JS ما كيتحمّلش بعد النشر — علاش؟", "a": "غالباً ما بنيتيش الأصول. شغّل 'npm install && npm run build' محلياً وكوميتي الملفات المبنية، ولا شغّل خطوة البناء على السيرفر."}
+      ],
+      "related": ["best-laravel-hosting-2026-ar"]
+    },
+
+    {
+      "slug": "deploy-laravel-app-cloudways-fr",
+      "group": "deploy-cloudways",
+      "lang": "fr",
+      "type": "deploy",
+      "h1": "Comment déployer une app Laravel sur Cloudways (2026)",
+      "title": "Déployer une app Laravel sur Cloudways — Pas à pas (2026)",
+      "meta_description": "Un guide clair en copier-coller pour déployer une app Laravel 11 sur Cloudways : configuration serveur, déploiement Git, .env, migrations, workers de file et SSL.",
+      "keywords": ["déployer laravel cloudways", "tutoriel laravel cloudways", "héberger laravel cloudways"],
+      "affiliate": "cloudways",
+      "updated": "2026-06-17",
+      "intro": "Cloudways est la voie la plus simple pour une app Laravel : la version de PHP, Composer et le serveur web sont déjà réglés, vous évitez donc le moment où vous vous battez avec Nginx à 2 h du matin. Ce guide vous mène d'un serveur vierge à une app en ligne avec migrations, files et HTTPS — sans aucune expérience serveur supposée.",
+      "blocks": [
+        {"type": "h2", "text": "1. Lancer un serveur et une application"},
+        {"type": "p", "text": "Après l'inscription, créez un serveur et choisissez la pile PHP. Prenez une région proche de vos utilisateurs et la plus petite offre au début — vous pourrez monter en charge plus tard sans tout refaire. Cloudways vous provisionne un emplacement « application » où vivra votre code Laravel."},
+        {"type": "p", "text": "Une fois le serveur prêt, notez l'IP publique, les identifiants SSH/SFTP et le chemin public de l'application (il se termine par /public_html — votre dossier public/ de Laravel y correspond)."},
+        {"type": "h2", "text": "2. Pousser le code avec Git"},
+        {"type": "p", "text": "Depuis le tableau de bord de l'application, ouvrez le panneau Deployment via Git, ajoutez la clé SSH du dépôt et tirez la branche main. C'est plus propre que le SFTP car chaque déploiement futur se fait en un clic."},
+        {"type": "code", "lang": "bash", "text": "# locally, make sure your repo is clean\ngit add .\ngit commit -m \"production build\"\ngit push origin main\n\n# then in Cloudways: Deployment via Git > Pull"},
+        {"type": "h2", "text": "3. Configurer l'environnement"},
+        {"type": "p", "text": "Connectez-vous en SSH au serveur et préparez votre .env. Ne committez jamais les secrets — générez la clé d'application sur le serveur."},
+        {"type": "code", "lang": "bash", "text": "cp .env.example .env\nnano .env   # set APP_ENV=production, APP_DEBUG=false, DB_*, etc.\nphp artisan key:generate\ncomposer install --optimize-autoloader --no-dev"},
+        {"type": "h2", "text": "4. Migrer et mettre en cache"},
+        {"type": "code", "lang": "bash", "text": "php artisan migrate --force\nphp artisan config:cache\nphp artisan route:cache\nphp artisan view:cache"},
+        {"type": "p", "text": "L'option --force est requise en production car Laravel demande sinon une confirmation. Mettre config et routes en cache donne un vrai gain de vitesse à chaque requête."},
+        {"type": "h2", "text": "5. Files d'attente et tâches planifiées"},
+        {"type": "p", "text": "Si votre app envoie des mails ou traite des jobs, ajoutez un worker de file comme processus Supervisor depuis le tableau de bord, et pointez le cron vers le planificateur pour que tout ce qui est dans votre Kernel s'exécute à l'heure."},
+        {"type": "code", "lang": "bash", "text": "* * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1"},
+        {"type": "h2", "text": "6. Ajouter un domaine et le SSL"},
+        {"type": "p", "text": "Pointez l'enregistrement A de votre domaine vers l'IP du serveur, ajoutez le domaine dans le tableau de bord, puis activez le certificat gratuit Let's Encrypt. Mettez APP_URL dans .env sur le domaine https et relancez config:cache."}
+      ],
+      "faq": [
+        {"q": "Quelle version de PHP choisir pour Laravel 11 ?", "a": "Laravel 11 exige PHP 8.2 ou plus. Choisissez 8.3 sur Cloudways pour le meilleur équilibre entre vitesse et support des bibliothèques en 2026."},
+        {"q": "Ai-je besoin d'un serveur de base de données séparé ?", "a": "Non. L'instance MySQL (ou MariaDB) est sur le même serveur. Créez la base depuis le tableau de bord et copiez les identifiants dans votre .env."},
+        {"q": "Mon CSS/JS ne se charge pas après le déploiement — pourquoi ?", "a": "Vous n'avez probablement pas compilé les assets. Lancez « npm install && npm run build » en local et committez les fichiers compilés, ou lancez l'étape de build sur le serveur."}
+      ],
+      "related": ["best-laravel-hosting-2026-fr"]
     }
   ],
 

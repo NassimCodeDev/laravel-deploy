@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="{{LANG}}">
+<html lang="{{LANG}}" dir="{{DIR}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{TITLE}}</title>
 <meta name="description" content="{{META_DESCRIPTION}}">
 <link rel="canonical" href="{{CANONICAL}}">
+{{HREFLANG}}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{TITLE}}">
 <meta property="og:description" content="{{META_DESCRIPTION}}">
 <meta property="og:url" content="{{CANONICAL}}">
 <meta name="robots" content="index,follow">
+{{GSC_VERIFICATION}}
 {{JSONLD}}
 <style>
   :root{
@@ -91,9 +93,21 @@
   .draft{background:#fff8e6;border:1px solid #f0d98a;border-radius:8px;padding:12px 16px;
     font-family:var(--mono);font-size:13px;color:#7a5c00;margin:0 0 22px}
 
+  .langs{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:10px 0 0}
+  .langs a{color:var(--accent-ink)}
+  .langs strong{color:var(--ink)}
+
+  /* right-to-left (Arabic) */
+  [dir="rtl"] article ul li{padding-left:0;padding-right:26px}
+  [dir="rtl"] article ul li::before{left:auto;right:6px}
+  [dir="rtl"] .ad{border-left:1px solid var(--line);border-right:3px solid var(--accent)}
+  [dir="rtl"] .related a span{margin-right:0;margin-left:10px}
+  [dir="rtl"] pre,[dir="rtl"] code{text-align:left}
+
   @media (max-width:520px){ h1{font-size:27px} body{font-size:16px} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
 </style>
+{{ANALYTICS}}
 </head>
 <body>
 <header class="site">
@@ -105,11 +119,12 @@
 
 <main class="wrap">
   <nav class="crumbs"><a href="index.html">home</a> <span>/</span> {{TYPE}} <span>/</span> {{SLUG}}</nav>
+  {{LANGS}}
   <div class="eyebrow">{{TYPE_LABEL}}</div>
   <h1>{{H1}}</h1>
   {{DRAFT_NOTICE}}
   <p class="intro">{{INTRO}}</p>
-  <p class="meta-line">updated {{UPDATED}} · by {{AUTHOR}}</p>
+  <p class="meta-line">{{UPDATED_LABEL}} {{UPDATED}} · {{BY_LABEL}} {{AUTHOR}}</p>
 
   <article>
     {{BODY}}

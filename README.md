@@ -24,6 +24,15 @@ python build.py           # generates everything into output/
 On Windows use `python` — `python3` there is a broken Microsoft Store stub.
 Open `output/index.html` in a browser. That's the whole site.
 
+## Live site & deploy
+
+- **Live:** https://nassimcodedev.github.io/laravel-deploy/
+- **Repo:** https://github.com/NassimCodeDev/laravel-deploy
+- Hosted on **GitHub Pages**, built by **GitHub Actions** (`.github/workflows/deploy.yml`).
+- The daily loop is now: edit `data/keywords.json` → `git push` → the Action runs
+  `python build.py` and publishes `output/` automatically. No manual upload.
+- `output/` is git-ignored on purpose — CI rebuilds it on every push.
+
 ## Files
 
 ```

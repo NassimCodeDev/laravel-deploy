@@ -5,7 +5,11 @@ build.py — programmatic SEO generator for a Laravel developer site.
 Reads data/keywords.json and writes static HTML pages, an index, and a sitemap
 into output/. No external dependencies — runs anywhere Python 3 runs.
 
-    python3 build.py
+    python build.py        # (python3 on macOS/Linux)
+
+Supports multiple languages: a page can set "lang" (e.g. "ar", "fr") and a
+"group" key shared with its translations. Same-group pages get hreflang tags
+and a language switcher automatically. Arabic pages render right-to-left.
 """
 
 import json, html, datetime, pathlib, re
@@ -18,21 +22,30 @@ OUT.mkdir(exist_ok=True)
 
 SITE = DATA["site"]
 AFFILIATES = DATA["affiliates"]
+I18N = DATA.get("i18n", {})
+DEFAULT_LANG = SITE["lang"]
 YEAR = datetime.date.today().year
 TODAY = datetime.date.today().isoformat()
 
-TYPE_LABELS = {
-    "deploy": "Deployment guide",
-    "fix": "Fix / troubleshooting",
-    "compare": "Comparison",
-    "howto": "How-to guide",
-}
+LANG_LABELS = {"en": "English", "ar": "العربية", "fr": "Français"}
 
 def esc(s): return html.escape(str(s), quote=True)
 
 def slugify(text):
     s = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
     return re.sub(r"-+", "-", s)
+
+def strings_for(lang):
+    """UI strings for a language, falling back to the default language."""
+    base = dict(I18N.get(DEFAULT_LANG, {}))
+    base.update(I18N.get(lang, {}))
+    tl = dict(I18N.get(DEFAULT_LANG, {}).get("type_labels", {}))
+    tl.update(I18N.get(lang, {}).get("type_labels", {}))
+    base["type_labels"] = tl
+    return base
+
+def page_lang(page): return page.get("lang", DEFAULT_LANG)
+def page_dir(page):  return page.get("dir", "rtl" if page_lang(page) == "ar" else "ltr")
 
 # ---------- block rendering ----------
 
@@ -50,38 +63,85 @@ def render_blocks(blocks):
         elif t == "code":
             lang = esc(b.get("lang", ""))
             label = f'<span class="lang">{lang}</span>' if lang else ""
-            out.append(f'<pre>{label}<code>{esc(b["text"])}</code></pre>')
+            # code is always LTR, even inside an RTL page
+            out.append(f'<pre dir="ltr">{label}<code>{esc(b["text"])}</code></pre>')
     return "\n    ".join(out)
 
-def render_ad(aff_key):
+def render_ad(aff_key, lang, strings):
     a = AFFILIATES.get(aff_key)
     if not a:
         return ""
+    blurb = a.get(f"blurb_{lang}", a["blurb"])
+    cta = a.get(f"cta_{lang}", a["cta"])
     return f"""<div class="ad">
-      <div class="tag">Recommended hosting</div>
+      <div class="tag">{esc(strings['ad_tag'])}</div>
       <div class="name">{esc(a['name'])}</div>
-      <p>{esc(a['blurb'])}</p>
-      <a class="btn" href="{esc(a['url'])}" rel="sponsored nofollow" target="_blank">{esc(a['cta'])}</a>
-      <p class="disc">Affiliate link — we may earn a commission at no extra cost to you.</p>
+      <p>{esc(blurb)}</p>
+      <a class="btn" href="{esc(a['url'])}" rel="sponsored nofollow" target="_blank">{esc(cta)}</a>
+      <p class="disc">{esc(strings['disclosure'])}</p>
     </div>"""
 
-def render_faq(faq):
+def render_faq(faq, strings):
     if not faq:
         return ""
     rows = []
     for item in faq:
         rows.append(f'<div class="q">{esc(item["q"])}</div><p class="a">{esc(item["a"])}</p>')
-    return '<div class="faq"><h2>Frequently asked questions</h2>' + "".join(rows) + "</div>"
+    return f'<div class="faq"><h2>{esc(strings["faq"])}</h2>' + "".join(rows) + "</div>"
 
-def render_related(slugs, lookup):
+def render_related(slugs, lookup, strings):
     if not slugs:
         return ""
     links = []
     for s in slugs:
         title = lookup.get(s, s)
         links.append(f'<a href="{esc(s)}.html"><span>→</span>{esc(title)}</a>')
-    return ('<div class="related"><div class="eyebrow">Related</div>'
+    return (f'<div class="related"><div class="eyebrow">{esc(strings["related"])}</div>'
             + "".join(links) + "</div>")
+
+def render_langs(page, groups):
+    """Language switcher linking a page to its translations in the same group."""
+    g = page.get("group")
+    if not g or g not in groups or len(groups[g]) < 2:
+        return ""
+    cur = page_lang(page)
+    parts = []
+    for lang in ["en", "ar", "fr"]:
+        if lang not in groups[g]:
+            continue
+        label = LANG_LABELS.get(lang, lang)
+        if lang == cur:
+            parts.append(f"<strong>{esc(label)}</strong>")
+        else:
+            parts.append(f'<a href="{esc(groups[g][lang])}.html">{esc(label)}</a>')
+    return '<div class="langs">' + " · ".join(parts) + "</div>"
+
+# ---------- head extras ----------
+
+def hreflang(page, groups):
+    g = page.get("group")
+    if not g or g not in groups:
+        return ""
+    base = SITE["base_url"]
+    out = [f'<link rel="alternate" hreflang="{esc(lang)}" href="{esc(base)}/{esc(slug)}.html">'
+           for lang, slug in groups[g].items()]
+    if DEFAULT_LANG in groups[g]:
+        out.append(f'<link rel="alternate" hreflang="x-default" '
+                   f'href="{esc(base)}/{esc(groups[g][DEFAULT_LANG])}.html">')
+    return "\n".join(out)
+
+def gsc_meta():
+    code = SITE.get("gsc_verification", "")
+    return f'<meta name="google-site-verification" content="{esc(code)}">' if code else ""
+
+def analytics_snippet():
+    ga = SITE.get("ga_id", "")
+    if not ga:
+        return ""
+    return (f'<script async src="https://www.googletagmanager.com/gtag/js?id={esc(ga)}"></script>\n'
+            f'<script>window.dataLayer=window.dataLayer||[];'
+            f'function gtag(){{dataLayer.push(arguments);}}'
+            f'gtag("js",new Date());gtag("config","{esc(ga)}");</script>')
 
 # ---------- structured data ----------
 
@@ -92,6 +152,7 @@ def jsonld(page):
         "@type": "TechArticle",
         "headline": page["h1"],
         "description": page["meta_description"],
+        "inLanguage": page_lang(page),
         "datePublished": page.get("updated", TODAY),
         "dateModified": page.get("updated", TODAY),
         "author": {"@type": "Organization", "name": SITE["author"]},
@@ -113,12 +174,16 @@ def jsonld(page):
 
 # ---------- page assembly ----------
 
-def build_page(page, lookup):
-    canonical = f"{SITE['base_url']}/{page['slug']}.html"
+def _logo_parts():
     name = SITE["name"]
-    # split logo into prefix + accented suffix (last capitalized chunk)
     m = re.match(r"(.*?)([A-Z][a-z]+)$", name)
-    prefix, suffix = (m.group(1), m.group(2)) if m else (name, "")
+    return (m.group(1), m.group(2)) if m else (name, "")
+
+def build_page(page, lookup, groups):
+    lang = page_lang(page)
+    strings = strings_for(lang)
+    canonical = f"{SITE['base_url']}/{page['slug']}.html"
+    prefix, suffix = _logo_parts()
 
     draft = ""
     if page.get("_draft"):
@@ -126,27 +191,34 @@ def build_page(page, lookup):
                  'Fill the body before publishing (run generate_content.py or write by hand).</div>')
 
     repl = {
-        "{{LANG}}": SITE["lang"],
+        "{{LANG}}": esc(lang),
+        "{{DIR}}": page_dir(page),
         "{{TITLE}}": esc(page["title"]),
         "{{META_DESCRIPTION}}": esc(page["meta_description"]),
         "{{CANONICAL}}": esc(canonical),
+        "{{HREFLANG}}": hreflang(page, groups),
+        "{{GSC_VERIFICATION}}": gsc_meta(),
+        "{{ANALYTICS}}": analytics_snippet(),
         "{{JSONLD}}": jsonld(page),
         "{{SITE_PREFIX}}": esc(prefix),
         "{{SITE_SUFFIX}}": esc(suffix),
-        "{{SITE_NAME}}": esc(name),
-        "{{TAGLINE}}": esc(SITE["tagline"]),
+        "{{SITE_NAME}}": esc(SITE["name"]),
+        "{{TAGLINE}}": esc(strings.get("tagline", SITE["tagline"])),
         "{{TYPE}}": esc(page["type"]),
-        "{{TYPE_LABEL}}": esc(TYPE_LABELS.get(page["type"], page["type"])),
+        "{{TYPE_LABEL}}": esc(strings["type_labels"].get(page["type"], page["type"])),
         "{{SLUG}}": esc(page["slug"]),
         "{{H1}}": esc(page["h1"]),
         "{{DRAFT_NOTICE}}": draft,
         "{{INTRO}}": esc(page["intro"]),
+        "{{UPDATED_LABEL}}": esc(strings["updated"]),
         "{{UPDATED}}": esc(page.get("updated", TODAY)),
+        "{{BY_LABEL}}": esc(strings["by"]),
         "{{AUTHOR}}": esc(SITE["author"]),
+        "{{LANGS}}": render_langs(page, groups),
         "{{BODY}}": render_blocks(page.get("blocks", [])),
-        "{{AD}}": render_ad(page.get("affiliate")),
-        "{{FAQ}}": render_faq(page.get("faq", [])),
-        "{{RELATED}}": render_related(page.get("related", []), lookup),
+        "{{AD}}": render_ad(page.get("affiliate"), lang, strings),
+        "{{FAQ}}": render_faq(page.get("faq", []), strings),
+        "{{RELATED}}": render_related(page.get("related", []), lookup, strings),
         "{{YEAR}}": str(YEAR),
     }
     out = TEMPLATE
@@ -191,46 +263,46 @@ def expand_matrix():
 
 # ---------- index + sitemap ----------
 
-def build_index(pages):
-    groups = {}
-    for p in pages:
-        groups.setdefault(p["type"], []).append(p)
+def build_index(pages, groups):
+    """Home page lists the default-language pages grouped by type."""
+    strings = strings_for(DEFAULT_LANG)
+    en_pages = [p for p in pages if page_lang(p) == DEFAULT_LANG]
+    by_type = {}
+    for p in en_pages:
+        by_type.setdefault(p["type"], []).append(p)
+
     sections = []
-    for typ, label in TYPE_LABELS.items():
-        if typ not in groups:
+    for typ, label in strings["type_labels"].items():
+        if typ not in by_type:
             continue
         links = "".join(
             f'<a href="{esc(p["slug"])}.html"><span>→</span>{esc(p["h1"])}'
             + (' <em style="color:#b08900;font-style:normal">· draft</em>' if p.get("_draft") else "")
             + "</a>"
-            for p in groups[typ]
+            for p in by_type[typ]
         )
         sections.append(f'<div class="related"><div class="eyebrow">{esc(label)}</div>{links}</div>')
 
-    page = {
-        "slug": "index", "type": "home",
-        "h1": SITE["name"], "title": f"{SITE['name']} — {SITE['tagline']}",
-        "meta_description": SITE["tagline"], "intro": SITE["tagline"],
-        "blocks": [], "faq": [], "related": [], "affiliate": None,
-    }
-    # reuse template, drop the body into RELATED slot via sections
-    lookup = {}
-    html_out = TEMPLATE
+    prefix, suffix = _logo_parts()
     canonical = f"{SITE['base_url']}/index.html"
-    m = re.match(r"(.*?)([A-Z][a-z]+)$", SITE["name"])
-    prefix, suffix = (m.group(1), m.group(2)) if m else (SITE["name"], "")
     repl = {
-        "{{LANG}}": SITE["lang"], "{{TITLE}}": esc(page["title"]),
-        "{{META_DESCRIPTION}}": esc(page["meta_description"]),
-        "{{CANONICAL}}": esc(canonical), "{{JSONLD}}": "",
+        "{{LANG}}": esc(DEFAULT_LANG), "{{DIR}}": "ltr",
+        "{{TITLE}}": esc(f"{SITE['name']} — {SITE['tagline']}"),
+        "{{META_DESCRIPTION}}": esc(SITE["tagline"]),
+        "{{CANONICAL}}": esc(canonical), "{{HREFLANG}}": "",
+        "{{GSC_VERIFICATION}}": gsc_meta(), "{{ANALYTICS}}": analytics_snippet(),
+        "{{JSONLD}}": "",
         "{{SITE_PREFIX}}": esc(prefix), "{{SITE_SUFFIX}}": esc(suffix),
         "{{SITE_NAME}}": esc(SITE["name"]), "{{TAGLINE}}": esc(SITE["tagline"]),
-        "{{TYPE}}": "home", "{{TYPE_LABEL}}": "Index", "{{SLUG}}": "",
-        "{{H1}}": esc(page["h1"]), "{{DRAFT_NOTICE}}": "", "{{INTRO}}": esc(page["intro"]),
-        "{{UPDATED}}": TODAY, "{{AUTHOR}}": esc(SITE["author"]),
-        "{{BODY}}": "", "{{AD}}": "", "{{FAQ}}": "",
+        "{{TYPE}}": "home", "{{TYPE_LABEL}}": esc(strings.get("index_label", "Index")),
+        "{{SLUG}}": "", "{{H1}}": esc(SITE["name"]), "{{DRAFT_NOTICE}}": "",
+        "{{INTRO}}": esc(SITE["tagline"]),
+        "{{UPDATED_LABEL}}": esc(strings["updated"]), "{{UPDATED}}": TODAY,
+        "{{BY_LABEL}}": esc(strings["by"]), "{{AUTHOR}}": esc(SITE["author"]),
+        "{{LANGS}}": "", "{{BODY}}": "", "{{AD}}": "", "{{FAQ}}": "",
         "{{RELATED}}": "".join(sections), "{{YEAR}}": str(YEAR),
     }
+    html_out = TEMPLATE
     for k, v in repl.items():
         html_out = html_out.replace(k, v)
     (OUT / "index.html").write_text(html_out, encoding="utf-8")
@@ -250,21 +322,30 @@ def build_sitemap(pages):
 # ---------- run ----------
 
 def main():
-    authored = DATA["pages"]
-    matrix = expand_matrix()
-    all_pages = authored + matrix
+    all_pages = DATA["pages"] + expand_matrix()
     lookup = {p["slug"]: p["h1"] for p in all_pages}
 
+    groups = {}
     for p in all_pages:
-        build_page(p, lookup)
-    build_index(all_pages)
+        g = p.get("group")
+        if g:
+            groups.setdefault(g, {})[page_lang(p)] = p["slug"]
+
+    for p in all_pages:
+        build_page(p, lookup, groups)
+    build_index(all_pages, groups)
     build_sitemap(all_pages)
 
     drafts = sum(1 for p in all_pages if p.get("_draft"))
     full = len(all_pages) - drafts
+    by_lang = {}
+    for p in all_pages:
+        by_lang[page_lang(p)] = by_lang.get(page_lang(p), 0) + 1
+    langs = ", ".join(f"{k}:{v}" for k, v in sorted(by_lang.items()))
     print(f"[built] {len(all_pages)} pages -> {OUT}/")
     print(f"  - {full} full pages ready to publish")
     print(f"  - {drafts} skeleton pages need content before publishing")
+    print(f"  - languages: {langs}")
     print(f"  - index.html + sitemap.xml generated")
 
 if __name__ == "__main__":
